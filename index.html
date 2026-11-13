@@ -291,6 +291,9 @@
   .hubback{display:block; padding:.55rem 1rem; font-size:.9rem; font-weight:600; color:var(--muted); text-decoration:none; border-bottom:1px solid var(--border)}
   .hubback:hover{color:var(--text)}
   @media print{.hubback{display:none}}
+  /* Phone fix: keep the content column inside the screen; wide tables scroll inside their card */
+  @media (max-width:860px){ .shell{align-items:stretch} .shell>.wrap{width:100%; min-width:0} .shell>.sidenav{min-width:0} .wrap table{display:block; max-width:100%; overflow-x:auto} }
+  .wrap code{overflow-wrap:anywhere}
 </style>
 </head>
 <body>
