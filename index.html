@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech Hub — Succession &amp; Revival Guide</title>
+<style>
+  :root{
+    --accent:#e94560; --accent2:#ff6b6b; --text:#e8e8e8; --muted:#9aa3b2;
+    --glass:rgba(255,255,255,.05); --glass2:rgba(255,255,255,.08);
+    --border:rgba(255,255,255,.12); --warn:#ffb020; --ok:#3ddc97; --code:#ffd479;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%) fixed;
+    color:var(--text); line-height:1.6; padding-bottom:5rem; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:0 1.25rem}
+
+  header.top{
+    position:sticky; top:0; z-index:20;
+    background:rgba(15,20,35,.82); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border); padding:1rem 0 .85rem;
+  }
+  header.top h1{
+    font-size:1.5rem; font-weight:800; letter-spacing:-.02em;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  }
+  header.top .sub{color:var(--muted); font-size:.85rem; margin-top:2px}
+  .searchbar{display:flex; align-items:center; gap:.6rem; margin-top:.85rem; position:relative}
+  #q{
+    flex:1; background:var(--glass); border:1px solid var(--border); color:var(--text);
+    border-radius:12px; padding:.7rem 1rem .7rem 2.4rem; font-size:1rem; font-family:inherit; outline:none;
+    transition:border-color .15s, background .15s;
+  }
+  #q:focus{border-color:var(--accent); background:var(--glass2)}
+  .searchbar .mag{position:absolute; left:.85rem; top:50%; transform:translateY(-50%); color:var(--muted); pointer-events:none; font-size:1rem}
+  .count{font-size:.8rem; color:var(--muted); white-space:nowrap; min-width:4.5rem; text-align:right}
+  nav.jump{display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.75rem}
+  nav.jump a{
+    font-size:.8rem; color:var(--muted); text-decoration:none; padding:.3rem .7rem;
+    border:1px solid var(--border); border-radius:999px; transition:.15s;
+  }
+  nav.jump a:hover{color:var(--text); border-color:var(--accent); background:var(--glass)}
+
+  /* ── layout: slim sticky top bar + left nav rail ── */
+  .topwrap{max-width:1180px}
+  .shell{max-width:1180px; margin:0 auto; padding:0 1.25rem; display:flex; gap:1.75rem; align-items:flex-start}
+  .shell > .wrap{margin:0; padding:0; flex:1 1 auto; min-width:0; max-width:960px}
+  .sidenav{
+    flex:0 0 176px; position:sticky; top:7.6rem; align-self:flex-start;
+    max-height:calc(100vh - 8.4rem); overflow:auto; padding-bottom:1rem;
+  }
+  .sidenav nav.jump{flex-direction:column; flex-wrap:nowrap; gap:.12rem; margin-top:0}
+  .sidenav nav.jump a{
+    border:none; border-left:2px solid transparent; border-radius:0 7px 7px 0; text-align:left;
+    padding:.42rem .7rem; font-size:.82rem;
+  }
+  .sidenav nav.jump a:hover{border-color:var(--accent); background:var(--glass); color:var(--text)}
+  .siderule{height:1px; background:var(--border); margin:.7rem .2rem}
+  .sidenav .notesbar{flex-direction:column; align-items:stretch; gap:.4rem; margin-top:0}
+  .sidenav .mini{text-align:center}
+  .sidenav #noteState{margin-top:.35rem; line-height:1.45}
+  @media(max-width:860px){
+    .shell{flex-direction:column; gap:1rem}
+    .sidenav{position:static; flex:auto; width:auto; max-height:none; overflow:visible; padding-bottom:0}
+    .sidenav nav.jump{flex-direction:row; flex-wrap:wrap; gap:.4rem}
+    .sidenav nav.jump a{border:1px solid var(--border); border-radius:999px}
+    .sidenav .notesbar{flex-direction:row; flex-wrap:wrap; align-items:center}
+    .siderule{display:none}
+    .shell > .wrap{max-width:none}
+  }
+
+  section{margin-top:2.5rem; scroll-margin-top:8rem}
+  section > h2{
+    font-size:1.25rem; font-weight:700; margin-bottom:.35rem; color:#fff;
+    display:flex; align-items:center; gap:.5rem;
+  }
+  section > .lead{color:var(--muted); font-size:.9rem; margin-bottom:1.1rem}
+
+  .card{
+    background:var(--glass); border:1px solid var(--border); border-radius:14px;
+    padding:1.1rem 1.25rem; margin-bottom:.9rem; transition:transform .15s, border-color .15s;
+    position:relative;
+  }
+  .card:hover{border-color:rgba(233,69,96,.4)}
+  .card > h3{color:#fff;font-size:1rem;margin-bottom:.5rem}
+
+  /* scenario cards */
+  .scn{border-left:3px solid var(--accent)}
+  .scn .symptom{font-weight:700; font-size:1.02rem; color:#fff; margin-bottom:.55rem}
+  .scn .symptom::before{content:"🔧 "; }
+  .row{display:flex; gap:.6rem; margin-top:.4rem; font-size:.92rem}
+  .row .k{flex:0 0 3.2rem; text-transform:uppercase; font-size:.68rem; letter-spacing:.06em; color:var(--muted); padding-top:.18rem; font-weight:700}
+  .row.fix .k{color:var(--accent2)}
+  .row .v{flex:1}
+  .row.wide .k{flex:0 0 7rem}
+
+  /* tool cards */
+  .tool{border-left:3px solid rgba(255,255,255,.18)}
+  .tool.p1{border-left-color:var(--accent)}
+  .tool.p2{border-left-color:var(--warn)}
+  .tool.p3{border-left-color:var(--muted)}
+  .tool .head{display:flex; align-items:center; gap:.6rem; flex-wrap:wrap; margin-bottom:.35rem}
+  .tool .head h3{font-size:1.05rem; color:#fff; font-weight:700}
+  .tool .what{color:var(--muted); font-size:.88rem; margin-bottom:.8rem}
+  .badge{font-size:.66rem; text-transform:uppercase; letter-spacing:.05em; padding:.2rem .55rem; border-radius:999px; border:1px solid var(--border); color:var(--muted); font-weight:700}
+  .badge.web{color:#7fd7ff; border-color:rgba(127,215,255,.4)}
+  .badge.menu{color:#c7a3ff; border-color:rgba(199,163,255,.4)}
+  .badge.standalone{color:#ffb020; border-color:rgba(255,176,32,.4)}
+  .badge.risk{color:#fff; background:var(--accent); border-color:var(--accent)}
+  .badge.dead{color:#1a1a2e; background:var(--muted); border-color:transparent}
+  .badge.p1{color:#fff;background:rgba(233,69,96,.75);border-color:transparent}
+  .badge.p2{color:#1a1a2e;background:var(--warn);border-color:transparent}
+  .badge.p3{color:var(--muted)}
+  .tool dl{display:grid; grid-template-columns:9.5rem 1fr; gap:.35rem .8rem; font-size:.9rem}
+  .tool dt{color:var(--muted); text-transform:uppercase; font-size:.68rem; letter-spacing:.05em; font-weight:700; padding-top:.15rem}
+  .tool dd{color:var(--text)}
+  .tool dd.verify{color:var(--ok)}
+  @media(max-width:560px){ .tool dl{grid-template-columns:1fr; gap:.1rem} .tool dt{margin-top:.5rem} }
+
+  code{font-family:'SF Mono',Menlo,Consolas,monospace; font-size:.85em; background:rgba(255,212,121,.12); color:var(--code); padding:.1rem .4rem; border-radius:5px}
+  strong.hl{color:#fff}
+  .callout{border-left:3px solid var(--warn); background:rgba(255,176,32,.08); padding:.7rem .9rem; border-radius:8px; margin-top:.6rem; font-size:.88rem}
+  .callout.info{border-color:#7fd7ff; background:rgba(127,215,255,.07)}
+  .callout.ok{border-color:var(--ok); background:rgba(61,220,151,.07)}
+
+  ol.steps{list-style:none; counter-reset:s}
+  ol.steps li{counter-increment:s; position:relative; padding:.55rem 0 .55rem 2.6rem; border-bottom:1px solid rgba(255,255,255,.06); font-size:.94rem}
+  ol.steps li:last-child{border-bottom:none}
+  ol.steps li::before{
+    content:counter(s); position:absolute; left:0; top:.5rem; width:1.7rem; height:1.7rem;
+    background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; font-weight:700; font-size:.85rem;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+  }
+  ul.plain{list-style:none}
+  ul.plain li{padding:.35rem 0 .35rem 1.4rem; position:relative; font-size:.92rem; border-bottom:1px solid rgba(255,255,255,.05)}
+  ul.plain li:last-child{border-bottom:none}
+  ul.plain li::before{content:"▸"; position:absolute; left:.2rem; color:var(--accent2)}
+
+  table{width:100%; border-collapse:collapse; font-size:.85rem; margin-top:.3rem; display:block; overflow-x:auto}
+  th,td{text-align:left; padding:.55rem .6rem; border-bottom:1px solid var(--border); white-space:nowrap}
+  th{color:var(--accent2); font-size:.72rem; text-transform:uppercase; letter-spacing:.05em}
+  tr.risk td{background:rgba(233,69,96,.09)}
+  td.fill{color:var(--muted); font-style:italic}
+  td.p1{color:var(--accent2);font-weight:700}
+  td.p2{color:var(--warn);font-weight:700}
+
+  dl.gloss{display:grid;grid-template-columns:11rem 1fr;gap:.4rem .9rem;font-size:.9rem}
+  dl.gloss dt{color:#fff;font-weight:700}
+  dl.gloss dd{color:var(--muted)}
+  @media(max-width:560px){ dl.gloss{grid-template-columns:1fr;gap:.1rem} dl.gloss dd{margin-bottom:.5rem} }
+
+  /* per-tool deep dive */
+  details.deeper{margin-top:.9rem; border-top:1px solid var(--border); padding-top:.75rem}
+  details.deeper > summary{
+    cursor:pointer; list-style:none; font-size:.8rem; font-weight:700; letter-spacing:.04em;
+    text-transform:uppercase; color:var(--accent2); display:flex; align-items:center; gap:.45rem;
+    user-select:none;
+  }
+  details.deeper > summary::-webkit-details-marker{display:none}
+  details.deeper > summary::before{content:"▶"; font-size:.7rem; transition:transform .15s}
+  details.deeper[open] > summary::before{transform:rotate(90deg)}
+  details.deeper > summary:hover{color:#fff}
+  .deep-body{font-size:.9rem; color:var(--text); padding-top:.8rem}
+  .deep-body h4,.deep-body h5,.deep-body h6{
+    color:#fff; font-size:.93rem; font-weight:700; margin:1.1rem 0 .35rem;
+    padding-bottom:.25rem; border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .deep-body h4:first-child{margin-top:0}
+  .deep-body p{margin:.5rem 0}
+  .deep-body ul.plain{margin:.4rem 0}
+  .deep-body ol.steps{margin:.4rem 0}
+  .deep-body ol.steps li{padding-left:2.4rem}
+  .deep-body table{margin:.5rem 0}
+  .deep-body .callout{margin:.6rem 0}
+  .deep-body code{word-break:break-word}
+
+  /* ── editable cells + margin notes ── */
+  .ed{cursor:text; border-radius:5px; transition:background .15s, box-shadow .15s}
+  .ed:hover{background:rgba(255,255,255,.06)}
+  .ed:focus{outline:none; background:rgba(255,255,255,.1); box-shadow:inset 0 0 0 1px var(--accent)}
+  td.ed{white-space:normal; min-width:7rem}
+  td.ed:empty::before{content:"—"; color:rgba(255,255,255,.22)}
+  .edhint{font-size:.72rem; color:var(--muted); margin-top:.5rem; font-style:italic}
+
+  .notebtn{
+    position:absolute; top:.5rem; right:.6rem; background:none; border:none; cursor:pointer;
+    font-size:.9rem; line-height:1; opacity:0; padding:.15rem .3rem; border-radius:6px; transition:opacity .15s;
+  }
+  .card:hover .notebtn{opacity:.55}
+  .notebtn:focus,.notebtn:hover{opacity:1; background:var(--glass2)}
+  .note{
+    margin-top:.9rem; border-left:3px solid #7fd7ff; background:rgba(127,215,255,.07);
+    border-radius:8px; padding:.5rem .7rem;
+  }
+  .note .lbl{
+    font-size:.63rem; text-transform:uppercase; letter-spacing:.07em; color:#7fd7ff; font-weight:700;
+    display:flex; justify-content:space-between; gap:.5rem; align-items:center;
+  }
+  .note .lbl button{background:none; border:none; color:var(--muted); cursor:pointer; font-size:.75rem; line-height:1}
+  .note .lbl button:hover{color:var(--accent2)}
+  .note .body{font-size:.87rem; white-space:pre-wrap; margin-top:.3rem; min-height:1.3rem; outline:none}
+  .note .body:empty::before{content:"Type your note…"; color:var(--muted); font-style:italic}
+  @media(min-width:1400px){
+    .note{
+      position:absolute; left:calc(100% + 1.3rem); top:1rem; width:15rem; margin-top:0;
+      max-height:calc(100% - 2rem); overflow:auto;
+    }
+    .notebtn{right:-1.9rem; top:1rem}
+  }
+
+  .notesbar{display:flex; align-items:center; gap:.5rem; margin-top:.6rem; font-size:.74rem; color:var(--muted); flex-wrap:wrap}
+  .mini{
+    background:var(--glass); border:1px solid var(--border); color:var(--muted); font-family:inherit;
+    font-size:.72rem; padding:.22rem .65rem; border-radius:999px; cursor:pointer;
+  }
+  .mini:hover{color:#fff; border-color:var(--accent)}
+  #exportPane{
+    position:fixed; inset:0; z-index:50; background:rgba(10,14,25,.82); backdrop-filter:blur(6px);
+    display:none; align-items:center; justify-content:center; padding:1.5rem;
+  }
+  #exportPane.on{display:flex}
+  #exportPane .box{background:#141a2b; border:1px solid var(--border); border-radius:14px; padding:1.1rem; width:min(720px,100%)}
+  #exportPane h3{color:#fff; font-size:1rem; margin-bottom:.4rem}
+  #exportPane p{font-size:.8rem; color:var(--muted); margin-bottom:.6rem}
+  #exportPane textarea{
+    width:100%; height:min(52vh,400px); background:rgba(0,0,0,.35); color:var(--text);
+    font-family:'SF Mono',Menlo,Consolas,monospace; font-size:.78rem; line-height:1.5;
+    border:1px solid var(--border); border-radius:10px; padding:.7rem; resize:vertical;
+  }
+  #exportPane .acts{display:flex; gap:.5rem; justify-content:flex-end; margin-top:.7rem}
+
+  @media print{
+    @page{ margin:14mm 12mm }
+    html{scroll-behavior:auto}
+    body{
+      background:#fff !important; color:#111 !important; padding:0; line-height:1.45;
+      font-size:10.5pt; -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .wrap{max-width:none; padding:0}
+    header.top{position:static; background:none; border-bottom:2px solid #111; padding:0 0 .5rem}
+    header.top h1{-webkit-text-fill-color:#111; color:#111; background:none; font-size:18pt}
+    header.top .sub{color:#444}
+    .searchbar,.sidenav,.notebtn,#exportPane,#noResults{display:none !important}
+    .shell{display:block; max-width:none; padding:0}
+    section{margin-top:1.2rem; break-inside:auto}
+    section > h2{color:#111; font-size:14pt; border-bottom:1px solid #999; padding-bottom:.15rem; break-after:avoid}
+    section > .lead{color:#444}
+    .card{
+      background:none !important; border:1px solid #bbb; border-radius:0; break-inside:avoid;
+      margin-bottom:.55rem; padding:.55rem .7rem; page-break-inside:avoid;
+    }
+    .card > h3,.tool .head h3,.scn .symptom,.deep-body h4,.deep-body h5,.deep-body h6{color:#000}
+    .tool .what,.tool dt,.row .k,dl.gloss dd{color:#444}
+    .tool dd,.deep-body,.note .body,strong.hl{color:#111}
+    .tool dd.verify{color:#0a6b45}
+    code{background:#f0f0f0; color:#7a3d00; border:1px solid #ddd}
+    .callout{background:#fbf5e6; border-left-color:#b8860b; color:#111}
+    .callout.info{background:#eef6fb; border-left-color:#2a6f97}
+    .callout.ok{background:#eefaf3; border-left-color:#0a6b45}
+    .badge{color:#333 !important; background:none !important; border:1px solid #999}
+    th{color:#111; border-bottom:2px solid #111}
+    td,th{white-space:normal; border-bottom:1px solid #ccc}
+    table{display:table; overflow:visible}
+    tr.risk td{background:#fdeef0 !important}
+    td.fill{color:#999}
+    ol.steps li::before{background:#333 !important; color:#fff}
+    ul.plain li::before{color:#666}
+    /* every deep dive prints, whatever its open state on screen */
+    details.deeper > summary{color:#000}
+    details.deeper .deep-body{display:block !important}
+    .note{background:#fffbe6 !important; border-left-color:#b8860b; position:static !important;
+          width:auto !important; max-height:none !important; margin-top:.5rem !important}
+    .hidden{display:block !important}   /* never print a half-filtered document */
+    a{color:#111; text-decoration:none}
+    footer{color:#444; border-top:1px solid #999}
+  }
+
+  #noResults{display:none; text-align:center; color:var(--muted); padding:3rem 0; font-size:1rem}
+  .hidden{display:none !important}
+  footer{margin-top:3rem; padding-top:1.25rem; border-top:1px solid var(--border); color:var(--muted); font-size:.8rem; text-align:center}
+  .kbd{font-family:monospace; background:var(--glass2); border:1px solid var(--border); border-radius:5px; padding:.05rem .4rem; font-size:.8em}
+</style>
+<style>
+  /* GitHub Pages port: the Sheet copy needs Apps Script, so the button is hidden here */
+  #sheetBtn{display:none !important}
+  .hubback{display:block; padding:.55rem 1rem; font-size:.9rem; font-weight:600; color:var(--muted); text-decoration:none; border-bottom:1px solid var(--border)}
+  .hubback:hover{color:var(--text)}
+  @media print{.hubback{display:none}}
+</style>
+</head>
+<body>
+<a class="hubback" href="https://cfa3177.github.io/hub/">&larr; Back to Hub</a>
+
+<header class="top">
+  <div class="wrap topwrap">
+    <h1>Tech Hub — Succession &amp; Revival Guide</h1>
+    <div class="sub">🔒 Internal reference — how to own, move, and revive every tool. Search a symptom or a tool name.</div>
+    <div class="searchbar">
+      <span class="mag">🔍</span>
+      <input id="q" type="text" placeholder="Search — e.g. &quot;permission&quot;, &quot;triggers&quot;, &quot;payroll&quot;, &quot;blank links&quot;…" autocomplete="off" spellcheck="false">
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+</header>
+
+<div id="exportPane">
+  <div class="box">
+    <h3>Your edits &amp; notes</h3>
+    <p>Browser storage is not a backup — it dies with this computer, this browser profile, or a cleared cache. Paste this into a doc on the leadership Drive, or into the guide itself, so it actually survives.</p>
+    <textarea id="exportText" spellcheck="false" readonly></textarea>
+    <div class="acts">
+      <button class="mini" id="copyBtn">Copy</button>
+      <button class="mini" id="closeBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+  <aside class="sidenav">
+    <nav class="jump">
+      <a href="#start">👋 Start here</a>
+      <a href="#pulse">🩺 Monthly check</a>
+      <a href="#triage">🚨 Something's broken</a>
+      <a href="#revival">Revival steps</a>
+      <a href="#tools">Per-tool cards</a>
+      <a href="#wiring">Wiring &amp; ownership</a>
+      <a href="#vibe">🤖 Editing with AI</a>
+      <a href="#retire">Retiring a tool</a>
+      <a href="#glossary">Glossary</a>
+    </nav>
+    <div class="siderule"></div>
+    <div class="notesbar">
+      <button class="mini" id="printBtn">🖨 Print / Save as PDF</button>
+      <button class="mini" id="exportBtn">Export everything I've written</button>
+      <button class="mini" id="sheetBtn">🗂 Build Sheet copy</button>
+      <button class="mini" id="clearBtn">Clear</button>
+      <span id="noteState">✎ Tables are editable and every card takes a note — saved in <strong class="hl">this browser only</strong>.</span>
+    </div>
+  </aside>
+
+  <div class="wrap">
+
+  <div class="card" id="router" style="border-left:3px solid var(--accent2)">
+    <h3>Which of these is you right now?</h3>
+    <ul class="plain">
+      <li><strong class="hl">Something is broken this minute.</strong> → <a href="#triage" style="color:var(--accent2)">🚨 Something's broken</a>, or just type the symptom in the search box above.</li>
+      <li><strong class="hl">You just inherited all this and nothing is on fire.</strong> → <a href="#start" style="color:var(--accent2)">👋 Start here</a>, then skim <a href="#pulse" style="color:var(--accent2)">🩺 Monthly check</a>.</li>
+      <li><strong class="hl">You want to understand or change one specific tool.</strong> → <a href="#tools" style="color:var(--accent2)">its card</a>, and open that card's <em>Go deeper</em> panel.</li>
+    </ul>
+  </div>
+
+  <p id="noResults">No matches. Try a shorter word — a symptom (“permission”, “email”), a tool name, or a function.</p>
+
+  <!-- START HERE -->
+  <section id="start">
+    <h2>👋 Start here</h2>
+    <div class="lead">If you just inherited this and don't know where to begin, read this one card. Everything else is reference.</div>
+
+    <div class="card" data-note="start-inherited">
+      <h3>What you've actually inherited</h3>
+      <p style="font-size:.93rem">Nine tools — eight in real use, plus <code>adoption-tracker</code>, which was built and never turned on. All of them are Google Sheets + Google Apps Script (Google's built-in scripting). <strong class="hl">There is no server, no hosting bill, and nothing to install.</strong> Each tool is a Google Sheet with code attached; some also publish a web page. If you can edit a spreadsheet, you can keep every one of these running — the day-to-day settings all live in sheet tabs, not in code.</p>
+      <div class="callout info">You do <em>not</em> need to be able to write code to own this. You need to be able to: open a Sheet, open <strong class="hl">Extensions → Apps Script</strong>, pick a function name from a dropdown, and press Run. That's the whole skill set for everything in this guide.</div>
+      <div class="callout ok">Every tool card has a collapsed <strong class="hl">Go deeper</strong> panel written for a developer — JSON, hash maps, edge cases. <strong class="hl">You can ignore all of them for the rest of your life</strong> and still keep every tool running. They're there for whoever you hand this to next, or for the AI you point at a problem — not a prerequisite for you.</div>
+    </div>
+
+    <div class="card" data-note="start-editor">
+      <h3>The one screen you'll keep coming back to</h3>
+      <p style="font-size:.93rem">Almost every instruction in this guide sends you to <strong class="hl">the Apps Script editor</strong>. You reach it from any tool's Sheet: <strong class="hl">Extensions → Apps Script</strong>. It opens in a new tab and looks like a code editor — intimidating the first time, but you only ever touch five things on it. Here's the whole map:</p>
+      <dl class="gloss">
+        <dt>The file list (left)</dt><dd>The <code>.gs</code> and <code>.html</code> files that make up the tool. You rarely edit these by hand — you paste whole files in when updating code.</dd>
+        <dt>The function dropdown (top)</dt><dd>A menu next to the <strong class="hl">▶ Run</strong> and <strong class="hl">🐞 Debug</strong> buttons. This is where you pick a function by name — e.g. <code>initializeSheet</code> — before running it. When a card says "run X," this is where.</dd>
+        <dt>▶ Run</dt><dd>Runs whatever function is showing in the dropdown. The first time, Google asks for permissions — <strong class="hl">always "Select all."</strong> Output and errors show in the <em>Execution log</em> that slides up at the bottom.</dd>
+        <dt>🕐 Triggers (left rail, clock icon)</dt><dd>The list of scheduled jobs. <strong class="hl">This is "the Triggers page"</strong> every card refers to. Empty here after a copy = the tool's automation is off. You add or delete rows here.</dd>
+        <dt>⚙ Project Settings (left rail, gear)</dt><dd>Where <strong class="hl">Script Properties</strong> live — the hidden IDs and tokens two tools need re-typed. Scroll to the bottom of this screen to find them.</dd>
+        <dt>Deploy (top-right, blue)</dt><dd>Only for web-app tools. <strong class="hl">Deploy → Manage deployments → Edit → New version</strong> is the exact path that pushes a code change live. A plain save does <em>not</em> go live until you do this.</dd>
+      </dl>
+      <div class="callout info">If you can find those six things, you can do everything in this guide. Nothing else on that screen matters for day-to-day ownership. When in doubt, take a screenshot of what you're seeing and ask the AI (see <a href="#vibe" style="color:#7fd7ff">🤖 Editing with AI</a>) "where is X on this screen?"</div>
+    </div>
+
+    <div class="card" data-note="start-first30">
+      <h3>Your first 30 minutes</h3>
+      <ol class="steps">
+        <li><strong class="hl">Save this guide off this page.</strong> Hit <strong class="hl">🖨 Print / Save as PDF</strong> at the top and put the PDF on the leadership Drive. This page lives on one Google account like everything it warns you about — don't let the map die with the territory.</li>
+        <li><strong class="hl">Find out who to call.</strong> The contacts card below. If it's blank, fill it in from whoever handed this to you, today, while that person is still reachable.</li>
+        <li><strong class="hl">Confirm you can open each tool.</strong> Work down the ownership table below. Anything you can't open is the emergency — deal with it first.</li>
+        <li><strong class="hl">Check the two personal-account tools.</strong> <code>payroll-system</code> and <code>schedule-counter-gas</code> are the only real single points of failure. If they're still on a personal account, moving them is the highest-value thing you will do this month.</li>
+        <li><strong class="hl">Don't change anything yet.</strong> Nothing here breaks from being left alone. Tools break from being half-migrated.</li>
+      </ol>
+    </div>
+
+    <div class="card" data-note="start-five">
+      <h3>If you do nothing else, do these six</h3>
+      <ul class="plain">
+        <li><strong class="hl">Move payroll + schedule-counter to an org drive.</strong> Everything else survives a person leaving; those two might not.</li>
+        <li><strong class="hl">Fill in the ownership table</strong> below. An unfilled table is the actual succession risk — not the code.</li>
+        <li><strong class="hl">Write down every live <code>/exec</code> URL.</strong> These are pasted into emails, bookmarks, and other tools. A lost URL is a silent outage.</li>
+        <li><strong class="hl">Know that a copy carries tabs and settings and nothing else.</strong> Not triggers, not deployments, not permissions, not Script Properties. That one fact explains ~80% of "it stopped working."</li>
+        <li><strong class="hl">Never trust "no error."</strong> Almost everything here fails silently. Each tool card has a <em>Verify</em> line — do that thing and look at the result.</li>
+        <li><strong class="hl">Keep this guide current.</strong> It is the source of truth. When you change a tool, edit the <code>TOOLS</code> / <code>SCENARIOS</code> arrays at the bottom of <code>Guide.html</code> and redeploy — the tables on this page build themselves from <code>TOOLS</code>, so one edit updates all three.</li>
+      </ul>
+    </div>
+
+    <div class="card" data-note="start-live-vs-repo">
+      <h3>⚠ There are two copies of every tool — and they are not the same</h3>
+      <p style="font-size:.93rem">Each tool exists twice: as <strong class="hl">files in the GitHub repo</strong> (the written-down version, which is what the deep dives on this page describe) and as <strong class="hl">the live Apps Script project</strong> attached to the real Sheet (the version that actually runs). <strong class="hl">Nothing syncs them.</strong> Updating a tool means opening its Apps Script project and pasting the new code in by hand, then publishing a new version.</p>
+      <div class="callout">So the live code can lag the repo — and as of the date in the footer, <strong class="hl">it does</strong>. Fixes and features for <code>catering-quote-tool</code>, <code>Monday Morning Huddle</code> and <code>payroll-system</code> were written and committed but never pasted into the live projects. If a card here describes something you can't find in the running tool, this is why — it isn't broken, it was never deployed.</div>
+      <div class="callout info">How to tell what you're actually looking at: open the tool's Apps Script editor and read the code there. That is the truth. The repo is the backup and the history; this guide is the explanation. When they disagree, the editor wins.</div>
+    </div>
+
+    <div class="card" data-note="start-where">
+      <h3>Where everything lives, and who to call</h3>
+      <p style="font-size:.93rem">The source code for every tool is in one public GitHub repository:<br>
+      <code>github.com/brentb154/Brent-Chick-fil-A-Tech-Projects</code></p>
+      <p style="font-size:.93rem;margin-top:.5rem">One folder per tool, each with a <code>GUIDE.md</code> (the same deep dives embedded in this page) and the <code>.gs</code> / <code>.html</code> files you paste into Apps Script. <strong class="hl">It is public</strong> — no login needed to read it, and nothing secret is ever committed to it. That is also why this guide isn't in it.</p>
+      <div class="callout">Public repo rule: store info, ownership, <code>/exec</code> URLs, sheet IDs and tokens do <strong class="hl">not</strong> go in GitHub. If you add a tool, keep that line.</div>
+      <p style="font-size:.93rem;margin-top:.7rem"><strong class="hl">Who to call.</strong> No code can supply this. Fill it in and keep it filled in — cells are editable.</p>
+      <table id="contactTable" data-edit="Contacts">
+        <thead><tr><th>Role</th><th>Name</th><th>How to reach them</th><th>What they can help with</th></tr></thead>
+        <tbody>
+          <tr><td>Built these tools</td><td class="fill">fill</td><td class="fill">fill</td><td>Anything — the original author</td></tr>
+          <tr><td>Owns the Workspace / can transfer files</td><td class="fill">fill</td><td class="fill">fill</td><td>Locked-out accounts, Drive ownership, org access</td></tr>
+          <tr><td>Operator / final say</td><td class="fill">fill</td><td class="fill">fill</td><td>Whether a tool stays alive at all</td></tr>
+          <tr><td>Current day-to-day maintainer</td><td class="fill">fill</td><td class="fill">fill</td><td>Running setup functions, editing settings tabs</td></tr>
+          <tr><td class="fill">add a row above by editing Guide.html</td><td class="fill">fill</td><td class="fill">fill</td><td class="fill">fill</td></tr>
+        </tbody>
+      </table>
+      <div class="edhint">Type into any cell, then use <strong class="hl">Export</strong> at the top to save a copy — browser storage is not a backup.</div>
+    </div>
+
+    <div class="card" data-note="start-triage">
+      <h3>Triage order — what to save first</h3>
+      <p style="font-size:.9rem;color:var(--muted);margin-bottom:.4rem">Suggested priority if you're bringing everything back at once. Adjust to how the business is actually running when you read this — <strong class="hl">the cells are editable</strong>.</p>
+      <table id="triageTable" data-edit="Triage order">
+        <thead><tr><th>Priority</th><th>Tool</th><th>Why</th><th>Rough revive time</th></tr></thead>
+        <tbody id="triageBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- PULSE CHECK -->
+  <section id="pulse">
+    <h2>🩺 Monthly pulse check</h2>
+    <div class="lead">Everything here fails <em>silently</em>. The rest of this guide tells you how to fix a tool after it breaks; this card tells you how to catch it breaking. Ten minutes, once a month, on a calendar reminder. This is the single highest-value habit for a hub of tools that never announce their own failures.</div>
+    <div class="card" data-note="pulse-checklist">
+      <h3>The ten-minute sweep — your monthly pulse check</h3>
+      <ol class="steps">
+        <li><strong class="hl">Did the emails actually arrive?</strong> You are subscribed to (or CC'd on) the weekly summaries. If a Monday came and no payroll summary, no huddle report, no waste summary landed — that's the signal. A missing email is the <em>only</em> outward sign most of these tools give.</li>
+        <li><strong class="hl">Spot-check one tool's Triggers page.</strong> Rotate through them — open one tool's Apps Script editor, click the 🕐 clock icon, confirm the expected rows are there and none say "failed." Payroll should show 3, schedule-counter 3, training-tracker 5, catering 5+. An empty or shrinking list is a dead tool that still looks fine.</li>
+        <li><strong class="hl">Open the two customer-facing web apps.</strong> Load the catering <code>?view=app</code> page and the guest-recovery form. If either shows an error or a blank page instead of loading, a deployment or permission lapsed.</li>
+        <li><strong class="hl">Glance at the catering Supplies "no recipe" list.</strong> If it's growing, the menu drifted from <code>Recipe_BOM</code> — nothing is broken, but the numbers are quietly going stale.</li>
+        <li><strong class="hl">Confirm the ownership + contacts tables are still true.</strong> Someone left? A tool moved drives? A new <code>/exec</code> URL? Update the tables in <a href="#wiring" style="color:var(--accent2)">Wiring &amp; ownership</a> now, while you remember, and re-export.</li>
+      </ol>
+      <div class="callout">If all five are clean, you're done — close the tab. If one isn't, it points you straight at the matching <a href="#triage" style="color:var(--accent2)">🚨 Something's broken</a> card. Finding it here, in ten minutes, is the difference between "I noticed the report was late" and "payroll hasn't backed up in two months."</div>
+    </div>
+  </section>
+
+  <!-- TRIAGE -->
+  <section id="triage">
+    <h2>🚨 Something's broken?</h2>
+    <div class="lead">Find the symptom, get the cause and the exact fix. This is the section to reach for first.</div>
+    <div id="scenarios"></div>
+  </section>
+
+  <!-- REVIVAL -->
+  <section id="revival">
+    <h2>Master revival sequence</h2>
+    <div class="lead">What to do, in order, to bring any tool back to life on a new account. <strong class="hl">A copy carries the tabs and settings — nothing else.</strong></div>
+    <div class="card" data-note="revival-steps">
+      <ol class="steps">
+        <li><strong class="hl">Ownership.</strong> Make sure the script <em>and</em> its Sheet live on an org drive (store or leadership), not a personal account. Owning the file is what lets you redeploy.</li>
+        <li><strong class="hl">Setup.</strong> Open the Apps Script editor, run the tool's <em>Setup function</em> (see its card). Grant permissions when asked. Every setup function in this hub is safe to run more than once.</li>
+        <li><strong class="hl">Re-seed Properties.</strong> Only two tools need this — schedule-counter and guest-recovery. Skip otherwise.</li>
+        <li><strong class="hl">Enable automation.</strong> Run the tool's <em>trigger-setup function</em>. <strong class="hl">Separate step for every tool except payroll</strong> — without it, nothing is scheduled and the tool silently does nothing. Two exceptions to read on the card itself: <strong class="hl">training-tracker</strong> also needs two form-submit triggers added by hand, and <strong class="hl">catering</strong> has five installers plus one nightly trigger you make yourself.</li>
+        <li><strong class="hl">Deploy</strong> (web apps only). Deploy → New deployment → Web app → set <em>Execute as</em> + <em>Who has access</em> → copy the new <code>/exec</code> URL → update any links that used the old one.</li>
+        <li><strong class="hl">Re-authorize.</strong> Run a function that touches Drive/Calendar and <strong class="hl">grant every scope</strong> — Google's consent screen lets you skip Drive silently. Always “Select all.”</li>
+        <li><strong class="hl">Verify.</strong> Don't stop at "no errors." Each tool card has a <em>Verify</em> line — do that thing and see the result. Most of these tools fail <em>silently</em>, so "it didn't error" proves nothing.</li>
+      </ol>
+      <div class="callout info">Execute-as ≠ file owner. An org-owned script still runs as whoever <em>deployed</em> it, until a successor cuts a <strong class="hl">new deployment</strong> as themselves. Org-owned files make that a 2-minute fix; personal-account files make it impossible.</div>
+      <div class="callout">The single most common mistake: doing steps 1–3 and stopping. The tool opens, looks perfectly healthy, and quietly never sends another email. <strong class="hl">Step 4 is not optional.</strong></div>
+    </div>
+
+    <div class="card" data-note="revival-copy">
+      <h3>What survives a copy — and what doesn't</h3>
+      <table>
+        <thead><tr><th>Thing</th><th>Survives?</th><th>How to restore</th></tr></thead>
+        <tbody>
+          <tr><td>Sheet tabs + all data</td><td style="color:var(--ok)">✔ Yes</td><td>—</td></tr>
+          <tr><td>Settings tab values</td><td style="color:var(--ok)">✔ Yes</td><td>—</td></tr>
+          <tr><td>The code itself</td><td style="color:var(--ok)">✔ Yes</td><td>—</td></tr>
+          <tr class="risk"><td>Triggers (all scheduling)</td><td style="color:var(--accent2)">✘ No</td><td>Run the trigger-setup function</td></tr>
+          <tr class="risk"><td>Web app deployment + <code>/exec</code> URL</td><td style="color:var(--accent2)">✘ No</td><td>Deploy → New deployment</td></tr>
+          <tr class="risk"><td>Script Properties</td><td style="color:var(--accent2)">✘ No</td><td>Re-seed by hand (2 tools)</td></tr>
+          <tr class="risk"><td>OAuth permission grants</td><td style="color:var(--accent2)">✘ No</td><td>Run any function, “Select all”</td></tr>
+          <tr class="risk"><td>Drive folder IDs / file links</td><td style="color:var(--warn)">~ Mostly</td><td>Most regenerate on setup</td></tr>
+          <tr class="risk"><td>Linked Google Form → Sheet</td><td style="color:var(--accent2)">✘ No</td><td>Copying a Sheet does not bring the live Form. Re-link it, then re-add the form-submit trigger (training-tracker, shared-table)</td></tr>
+          <tr><td>The custom menu</td><td style="color:var(--ok)">✔ Yes</td><td>But only after you close and reopen the Sheet — <code>onOpen</code> builds it</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools">
+    <h2>Per-tool revival cards</h2>
+    <div class="lead">Function names code-verified 2026-07-23. Each card: what the tool is, how to set it up, how to turn its automation on, how to prove it worked, and what won't survive a copy. Every card also carries a <strong class="hl">Go deeper</strong> panel — the full maintainer deep-dive for that tool, embedded here so you don't need the repo. Search reaches inside them and opens the one that matched. <strong class="hl">Not a non-coder? Ignore every Go-deeper panel</strong> — the card above it is all you need to revive the tool; the panel is for a developer or an AI.</div>
+    <div id="toolcards"></div>
+  </section>
+
+  <!-- WIRING + OWNERSHIP -->
+  <section id="wiring">
+    <h2>Hidden wiring &amp; ownership</h2>
+    <div class="lead">The invisible links between tools, and the ownership facts to fill in before you leave.</div>
+
+    <div class="card" data-note="wiring-cross">
+      <h3>Cross-tool links that break silently</h3>
+      <div class="row wide"><span class="k">All → Adoption</span><span class="v"><code>ADOPTION_SHEET_ID</code> (Script Property) in seven tools. <strong class="hl">Currently set nowhere</strong>, so every ping is already a silent no-op — see the adoption-tracker card. Non-fatal either way: nothing else stops working when this is missing.</span></div>
+      <div class="row wide fix"><span class="k">Sched → Pay</span><span class="v"><code>PAYROLL_SHEET_ID</code> (Script Property) links schedule-counter to payroll. Re-seed with the new payroll Sheet ID after any rebuild, or schedule-counter can't see payroll numbers.</span></div>
+      <div class="row wide fix"><span class="k">Form → Waste</span><span class="v">shared-table-email-summary reads a <strong class="hl">Google Form response sheet</strong> that its setup does not create. If the Form is recreated, re-point the tool at the new response tab.</span></div>
+      <div class="row wide fix"><span class="k">Site → HEARD</span><span class="v">guest-recovery-log is POSTed to by an external form/site using its <code>/exec</code> URL + <code>apiToken</code>. Redeploying changes the URL — <strong class="hl">the poster must be updated too</strong>, or logging silently fails.</span></div>
+      <div class="row wide"><span class="k">Catering</span><span class="v">Its own <code>/exec</code> URL is embedded in tax-form request emails. A new deployment silently invalidates links already sent to guests.</span></div>
+    </div>
+
+    <div class="card" data-note="wiring-owner">
+      <h3>Ownership audit — fill this in</h3>
+      <div class="callout">This table is the single highest-value thing in this guide, and it is the one part no code can fill in. <strong class="hl">An unfilled table is the succession risk.</strong> Ten minutes now saves a successor a week.</div>
+      <div class="edhint">Click any cell to type in it. Saved in this browser — use <strong class="hl">Export</strong> at the top to get a copy you can keep.</div>
+      <table id="ownTable" data-edit="Ownership audit">
+        <thead><tr><th>Tool</th><th>Script owner</th><th>Sheet location</th><th>Execute-as</th><th>Live /exec URL</th><th>Notes</th></tr></thead>
+        <tbody id="ownBody"></tbody>
+      </table>
+      <div class="callout info" style="margin-top:.9rem">Also worth recording somewhere safe: which Google account owns each Drive folder, who else has edit access, and whether any tool emails from a shared mailbox rather than a person.</div>
+    </div>
+  </section>
+
+  <!-- VIBE CODING CRASH COURSE -->
+  <section id="vibe">
+    <h2>🤖 Editing these tools with AI (a crash course)</h2>
+    <div class="lead">These tools were built by describing what was needed in plain English to an AI assistant, which wrote the code. You can maintain and extend them the same way — you do not need to learn to code, you need to learn to <em>direct</em> the coding. This is the whole method, the models, the costs, and the guardrails.</div>
+
+    <div class="card" data-note="vibe-what">
+      <h3>What "vibe coding" actually is</h3>
+      <p style="font-size:.93rem">You describe the change you want in normal words. The AI writes or edits the code. <strong class="hl">You</strong> paste that code into the Apps Script editor, run it, and see if it worked. If it didn't, you tell the AI what happened and it tries again. That loop — describe → paste → run → report back — is the entire skill. The AI is fluent in Google Apps Script; you are fluent in what the restaurant needs. That division of labor is why a non-programmer built this hub.</p>
+      <div class="callout info">The AI cannot see your Sheet, cannot open your Apps Script editor, and cannot run anything for you. It only reads what you paste in and writes text back. <strong class="hl">You are the hands; it is the head.</strong> Every "run this / paste that / here's the error" step is yours.</div>
+    </div>
+
+    <div class="card" data-note="vibe-tools">
+      <h3>What to use</h3>
+      <p style="font-size:.93rem">Any capable AI chat assistant works; this hub was built with <strong class="hl">Claude</strong> (by Anthropic), so these tools "think" in the same style Claude writes. Three ways to reach it, simplest first:</p>
+      <ul class="plain">
+        <li><strong class="hl">claude.ai in a browser</strong> — the simplest. Paste a file in, describe the change, copy the answer back into Apps Script. No install. Start here.</li>
+        <li><strong class="hl">The Claude desktop or mobile app</strong> — same thing, nicer for going back and forth and for attaching screenshots of an error.</li>
+        <li><strong class="hl">Claude Code</strong> — a power-user tool that can read a whole project folder at once. This is what the tools were originally built with. Overkill for a small fix; worth learning if you end up doing this a lot.</li>
+      </ul>
+      <div class="callout">Other assistants (ChatGPT, Gemini, Cursor, GitHub Copilot) can do this too — the method is identical, only the website changes. Pick one and get comfortable; don't shop around mid-task.</div>
+    </div>
+
+    <div class="card" data-note="vibe-models">
+      <h3>Which model, and what it costs</h3>
+      <p style="font-size:.93rem">"Model" = which version of the AI's brain you're using. Smarter models cost more and think a little slower. For editing real code, <strong class="hl">use the most capable model you have access to</strong> — a bad edit to payroll costs far more than a few cents of AI time. Save the cheap, fast models for quick questions.</p>
+      <table>
+        <thead><tr><th>Model*</th><th>Use it for</th><th>Rough API price per 1M words-ish**</th></tr></thead>
+        <tbody>
+          <tr class="risk"><td class="p1">Claude Opus 4.8</td><td><strong class="hl">Default for any code change.</strong> The most capable everyday model — use it whenever you're touching a tool.</td><td>$5 in / $25 out</td></tr>
+          <tr><td>Claude Fable 5</td><td>The heaviest, most capable model — for a genuinely hard rebuild. Rarely needed; pricier.</td><td>$10 in / $50 out</td></tr>
+          <tr><td class="p2">Claude Sonnet 5</td><td>Everyday questions, "explain this code," light edits. Fast and cheaper.</td><td>$3 in / $15 out</td></tr>
+          <tr><td>Claude Haiku 4.5</td><td>Trivial, throwaway questions where speed matters and quality doesn't.</td><td>$1 in / $5 out</td></tr>
+        </tbody>
+      </table>
+      <div class="callout">The realistic way to pay is a <strong class="hl">flat monthly subscription</strong>, not per-word. An entry plan (around <strong class="hl">$20/month*</strong>) covers all the tool-maintenance you'll ever do; heavier "max" plans (up to a few hundred a month*) are only for someone using it all day. You almost certainly want the entry plan. The per-word API prices in the table only matter if you wire the AI directly into a tool — which nothing here does today.</div>
+      <div class="edhint">* <strong class="hl">Model names, plan names, and every price change over time — treat this table as a snapshot, not gospel.</strong> Check the live pricing page (for Claude: <code>claude.com/pricing</code>) before assuming a number. The model line-up as written was current when this guide was last updated (see footer). ** "per 1M tokens," a token being roughly ¾ of a word; shown only to compare models, since a normal editing session is a rounding error at these rates.</div>
+    </div>
+
+    <div class="card" data-note="vibe-context">
+      <h3>Give the AI the context it needs — the folder Brent left</h3>
+      <p style="font-size:.93rem">The AI starts every conversation knowing <em>nothing</em> about your restaurant, your tools, or how they're wired. It's brilliant but amnesiac. The single biggest thing that makes it useful is <strong class="hl">pasting in the right context first</strong>. Before you leave, Brent is putting a <strong class="hl">context folder on the leadership Drive</strong> holding exactly this material — use it.</p>
+      <p style="font-size:.93rem;margin-top:.5rem">For any change to one tool, give the AI:</p>
+      <ul class="plain">
+        <li><strong class="hl">That tool's <code>GUIDE.md</code></strong> from the repo (or its <em>Go deeper</em> panel here) — the plain-language explanation of how it works.</li>
+        <li><strong class="hl">The actual <code>.gs</code> / <code>.html</code> file you want changed</strong> — copy it out of the Apps Script editor and paste the whole thing.</li>
+        <li><strong class="hl">This guide's warnings</strong> — the copy-loses-triggers rule, the "publish a new version" rule, the gotchas on the tool's card. Paste the relevant bits so the AI doesn't reinvent a trap you already know about.</li>
+      </ul>
+      <div class="callout info">A good opening move: "Here is a Google Apps Script tool and its guide. [paste both] I want to [change]. Don't rewrite anything I didn't ask about. Show me exactly which file to change and what to paste, and tell me what to run and re-deploy afterward." The more you front-load, the less it guesses.</div>
+    </div>
+
+    <div class="card" data-note="vibe-workflow">
+      <h3>The safe way to make a change</h3>
+      <ol class="steps">
+        <li><strong class="hl">Back up first.</strong> For a Sheet-plus-code tool, File → Make a copy. For code, keep the old version pasted in a doc. You want a way back.</li>
+        <li><strong class="hl">Never test on the live payroll or a customer-facing tool.</strong> Make the copy from step 1 your sandbox. Break things there, not in production.</li>
+        <li><strong class="hl">Describe the change</strong> to the AI with the context above. Ask for the <em>whole</em> changed file, not a fragment — pasting a fragment into the wrong spot is the #1 beginner mistake.</li>
+        <li><strong class="hl">Paste it in, run the setup function, test it</strong> on the sandbox. Use the tool's <em>Verify</em> line from its card — don't trust "no error."</li>
+        <li><strong class="hl">Only then move it to the real tool</strong>, and for a web app, <strong class="hl">Deploy → Manage deployments → Edit → New version</strong> or the change never goes live.</li>
+        <li><strong class="hl">Update this guide.</strong> If you changed how a tool works, edit its card (the <code>TOOLS</code> array in <code>Guide.html</code>) so the next person isn't reading fiction.</li>
+      </ol>
+      <div class="callout">When something errors, <strong class="hl">copy the exact red error text</strong> (or screenshot it) and paste it straight back to the AI. "It says <code>TypeError: cannot read property 'getRange' of null</code>" gets a real fix; "it's broken" gets a guess.</div>
+    </div>
+
+    <div class="card" data-note="vibe-rules">
+      <h3>Rules that keep you out of trouble</h3>
+      <ul class="plain">
+        <li><strong class="hl">The AI is confident even when it's wrong.</strong> It can invent a function name or a Sheet tab that doesn't exist. If it references something you can't find, say so — don't assume you missed it.</li>
+        <li><strong class="hl">It doesn't know today's state.</strong> It can't see that a trigger is missing or a property is unset. <em>You</em> report what you see; it reasons from that.</li>
+        <li><strong class="hl">Never paste secrets into it</strong> that you wouldn't want stored elsewhere — real <code>apiToken</code> values, and be thoughtful with sheet IDs. Ask about the <em>shape</em> of the fix, then fill the real secret in yourself in Script Properties.</li>
+        <li><strong class="hl">Small steps beat big ones.</strong> One change, test, next change. A giant "rewrite the whole thing" answer is hard to check and easy to get subtly wrong.</li>
+        <li><strong class="hl">If you're in over your head, stop and call a human.</strong> The <a href="#start" style="color:var(--accent2)">contacts table</a> exists for exactly this. AI is a force multiplier, not a substitute for the person who built it.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- RETIRE -->
+  <section id="retire">
+    <h2>Retiring a tool</h2>
+    <div class="lead">If you inherit something you don't want, turn it off <em>properly</em> — a half-dead tool still emails people.</div>
+    <div class="card" data-note="retire-steps">
+      <ol class="steps">
+        <li><strong class="hl">Delete its triggers first.</strong> Apps Script editor → Triggers (clock icon) → delete every row. Most tools also have a <code>remove…Trigger()</code> function. Until you do this, it keeps emailing on schedule with nobody watching.</li>
+        <li><strong class="hl">Archive the deployment.</strong> Deploy → Manage deployments → Archive. Anyone holding the old <code>/exec</code> link then gets an error instead of a silently stale tool.</li>
+        <li><strong class="hl">Tell whoever POSTs to it.</strong> Only guest-recovery-log has an external poster, but check before assuming.</li>
+        <li><strong class="hl">Keep the Sheet.</strong> Don't delete data — rename it <code>ARCHIVED — &lt;name&gt;</code> and move it to an archive folder. Storage is free; a deleted payroll history is not recoverable.</li>
+        <li><strong class="hl">Note it here.</strong> Add it to the excluded list in the footer so the next person doesn't try to revive it. <code>manager-hub</code> is the existing example.</li>
+        <li><strong class="hl">Delete its card.</strong> Remove its object from the <code>TOOLS</code> array in <code>Guide.html</code> and redeploy — the tables rebuild themselves. A retired tool left on this page is a successor's wasted afternoon.</li>
+      </ol>
+      <div class="callout info">There is one live candidate right now: <strong class="hl">adoption-tracker</strong> was never wired up, so retiring it costs nothing — there are no triggers to delete and no deployment to archive. Just decide, and take it off this page.</div>
+      <div class="callout">A tool with triggers still installed but nobody maintaining it is worse than a deleted one — it sends stale numbers to real people who assume someone checked them.</div>
+    </div>
+  </section>
+
+  <!-- GLOSSARY -->
+  <section id="glossary">
+    <h2>Glossary</h2>
+    <div class="lead">Every term in this guide, in plain language. No prior knowledge assumed.</div>
+    <div class="card" data-note="glossary">
+      <dl class="gloss">
+        <dt>Apps Script</dt><dd>Google's built-in programming tool. Reach it from a Sheet via <strong class="hl">Extensions → Apps Script</strong>. It's where the code lives and where you press Run.</dd>
+        <dt>Function</dt><dd>A named action in the code, e.g. <code>initializeSheet</code>. You run one by picking it from the dropdown at the top of the editor and clicking ▶ Run.</dd>
+        <dt>Setup function</dt><dd>The one you run once to build a tool's tabs and settings. All of them here are safe to re-run — they create what's missing and leave your data alone.</dd>
+        <dt>Trigger</dt><dd>A scheduled job — "run this every day at 3pm." <strong class="hl">Triggers never survive a copy</strong>, which is why re-installing them is its own revival step.</dd>
+        <dt>Deployment</dt><dd>Publishing a script as a web page. Produces the <code>/exec</code> URL. Code changes do <em>not</em> go live until you publish a <strong class="hl">new version</strong>.</dd>
+        <dt><code>/exec</code> URL</dt><dd>The public web address of a deployed tool. Pasted into emails and bookmarks — so it changing quietly breaks things elsewhere.</dd>
+        <dt>Execute as</dt><dd>Whose Google account the tool acts as when it runs — whose Drive it writes to, whose Gmail it sends from. Set at deployment, <em>not</em> by who owns the file.</dd>
+        <dt>Who has access</dt><dd>Who's allowed to open the web app. "Anyone" means no sign-in (needed for outside guests); "Anyone within the organization" means a work sign-in is required.</dd>
+        <dt>Scope / permission</dt><dd>What Google services the script may touch — Drive, Calendar, Gmail. Granted on the consent screen. <strong class="hl">Always choose "Select all."</strong></dd>
+        <dt>Script Property</dt><dd>A hidden setting stored with the script rather than in a sheet tab — used for IDs and tokens. <strong class="hl">Never survives a copy</strong>; must be re-typed.</dd>
+        <dt>Sheet ID</dt><dd>The long code in a Sheet's URL between <code>/d/</code> and <code>/edit</code>. How one tool finds another.</dd>
+        <dt>Idempotent</dt><dd>Safe to run repeatedly with the same result. Every setup function here is.</dd>
+        <dt>Menu tool</dt><dd>A tool with no web page — you use it from a custom menu that appears in the Sheet's toolbar when you open it.</dd>
+        <dt>Standalone script</dt><dd>A script not attached to any Sheet; it finds its Sheet by an ID written in the code. Only guest-recovery-log works this way.</dd>
+        <dt>Form-submit trigger</dt><dd>A trigger that fires when someone submits a linked Google Form, rather than at a set time. Training-tracker runs on two of these, and <strong class="hl">no setup function installs them</strong> — you add them by hand on the Triggers page.</dd>
+        <dt>Repo / GitHub</dt><dd>The public folder of source code every tool is copied from — <code>github.com/brentb154/Brent-Chick-fil-A-Tech-Projects</code>. Read-only reference. It is <em>not</em> connected to the live tools; nothing syncs.</dd>
+        <dt>Token</dt><dd>A password-like string a site sends along with data so the tool knows the request is legitimate. Only guest-recovery-log uses one (<code>apiToken</code>).</dd>
+        <dt><code>app_cache</code></dt><dd>A hidden tab in schedule-counter holding one big pre-computed blob of text, so the page loads instantly instead of recalculating. Never edit it by hand — it rebuilds itself every Monday.</dd>
+        <dt>PO</dt><dd>Purchase order — the number a school or church gives you so they can pay later. Catering chases missing ones automatically.</dd>
+        <dt>DISD</dt><dd>Dallas ISD. Catering sends them their own weekly recap, on its own trigger.</dd>
+        <dt>CH / DBU</dt><dd>The two restaurants (Cockrell Hill and DBU). They appear as tab-name prefixes — <code>CH Menu</code>, <code>DBU Menu</code> — and are renameable in catering's Settings tab.</dd>
+        <dt><code>Recipe_BOM</code> / BOM</dt><dd>Bill of materials — the tab listing what components each menu item is made of, so the Supplies tab can turn "40 nugget trays" into cases of product.</dd>
+        <dt>Silent failure</dt><dd>The default failure mode of nearly everything here: the tool opens, shows no error, and quietly stops doing its job. Why every card has a Verify line.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <footer>
+    🔒 Internal — do not share externally, and never commit it to the public repo. This guide is the source of truth: edit the <code>SCENARIOS</code> / <code>TOOLS</code> arrays in <code>Guide.html</code> in its Apps Script project, then redeploy a new version. The triage and ownership tables build themselves from <code>TOOLS</code>.<br>
+    Function names and trigger counts last verified against the repo <strong class="hl">2026-07-23</strong> — and the repo is ahead of some live projects (see “two copies of every tool”). Press <span class="kbd">/</span> to search, <span class="kbd">Esc</span> to clear, <span class="kbd">🖨</span> to take a copy with you.<br>
+    Excluded on purpose: manager-hub (abandoned), demos (fake data), .automation (personal dev tooling).<br>
+    Source for every tool: <code>github.com/brentb154/Brent-Chick-fil-A-Tech-Projects</code> — public, read-only, never holds secrets.
+  </footer>
+  </div>
+</div>
+
+<script>
+  // ── CONTENT (edit these arrays to update the guide) ─────────────────
+  var SCENARIOS = [
+    { s:"The tool doesn't have a feature this guide says it has",
+      c:"The live Apps Script project is older than the repo. Code is pasted in by hand — nothing syncs — so a fix that was written and committed may never have been pasted into the running tool. Known cases as of the footer date: catering, Monday Huddle, payroll.",
+      f:"Open the tool's Apps Script editor and read the code there — that's the truth. To catch it up, copy the matching file out of <code>github.com/brentb154/Brent-Chick-fil-A-Tech-Projects</code>, paste it over the file in the editor, save, then <strong class='hl'>Deploy → Manage deployments → Edit → New version</strong> if it's a web app. Re-run the setup function afterwards; it's safe." },
+
+    { s:"A page shows “You do not have permission to call DriveApp / CalendarApp / MailApp…”",
+      c:"The account the web app runs as never granted that Google permission — usually after new code was added or the tool was copied. Google's granular-consent screen lets you skip the checkbox silently.",
+      f:"In the Apps Script editor, run any function that uses that service (catering: <code>checkTaxFormAuth</code>). On the consent screen, <strong class='hl'>Select all</strong>. Then Manage deployments → Edit → Version: <strong class='hl'>New version</strong> → Deploy. The live web app only picks up the grant after a new version." },
+
+    { s:"Automation stopped after I copied a tool to a new account",
+      c:"Triggers never copy with a Sheet. A fresh copy has zero scheduled jobs — the tool looks fine but does nothing.",
+      f:"Re-run the tool's trigger-setup function (see its card). Only <strong class='hl'>payroll</strong> wires its own during <code>runInitialSetup</code>; every other tool needs it run separately." },
+
+    { s:"Everything looks fine but no emails are going out from any tool",
+      c:"Almost always the same root cause as above — triggers were never re-installed after a move. Second most likely: the sending account hit Gmail's daily quota.",
+      f:"Check the Triggers page (clock icon) in each tool's editor — if it's empty, that's your answer. To check quota you need a function to run, because the editor can only run functions, not typed-in expressions: paste <code>function checkQuota(){ Logger.log(MailApp.getRemainingDailyQuota()); }</code> at the bottom of <code>Code.gs</code>, run it, and read the number in the execution log. A consumer Gmail account gets far fewer daily sends than a Workspace one." },
+
+    { s:"Email or upload links from a tool come out blank",
+      c:"That tool's web app isn't deployed on this copy, so it has no <code>/exec</code> URL to put in the link.",
+      f:"Deploy → New deployment → Web app, then copy the new <code>/exec</code> URL. Catering's tax-form link rebuilds itself once a deployment exists." },
+
+    { s:"I changed the code but the live page still shows the old version",
+      c:"The <code>/exec</code> URL always serves the last <em>published</em> version, not your latest save. This catches everyone at least once.",
+      f:"Deploy → Manage deployments → Edit (pencil) → Version: <strong class='hl'>New version</strong> → Deploy. Use the <code>/dev</code> URL while testing — that one always runs the latest save." },
+
+    { s:"Reminders or day-before confirmations aren't going out (catering)",
+      c:"Either the daily trigger isn't installed, or the feature's Settings toggle is off. Catering has five separate automations — installing one doesn't install the others.",
+      f:"Confirm the trigger functions on its card have been run, and Settings has <code>Confirmation Enabled</code> / <code>Reminder Enabled</code> / <code>DISD Reminder Enabled</code> = TRUE as appropriate. The hidden log tabs show what was last sent." },
+
+    { s:"The catering Supplies tab says “no recipe on file” for everything",
+      c:"<code>Recipe_BOM</code> is empty, or the menu item names don't match it. Matching is exact (case-insensitive) — a renamed menu item silently stops matching.",
+      f:"Run <code>resetRecipeBom()</code> and <code>resetCaseConversions()</code> once. ⚠ These <strong class='hl'>overwrite</strong> those two tabs — back up hand-edits first. Note <code>initializeSheet</code> deliberately will not touch them." },
+
+    { s:"Schedule-counter can't see payroll numbers",
+      c:"The <code>PAYROLL_SHEET_ID</code> Script Property wasn't re-seeded after a rebuild — that's the link between the two tools.",
+      f:"Project Settings → Script Properties → set <code>PAYROLL_SHEET_ID</code> to the payroll Sheet's ID." },
+
+    { s:"A whole tool is dead and nobody can open it",
+      c:"It was owned by an account that got disabled. Highest risk: <strong class='hl'>payroll and schedule-counter</strong> live on Brent's personal account.",
+      f:"Recover the org-drive copy (or Brent's export), re-own the script + Sheet on the leadership drive, then Deploy a new version as the new owner. Prevent it: move those two tools to an org drive now." },
+
+    { s:"Guest upload works for me but not for outside guests",
+      c:"Deployment access is wrong. Guests need the app to run as the owner and allow anyone.",
+      f:"Manage deployments → Edit → <strong class='hl'>Execute as: Me (owner)</strong>, <strong class='hl'>Who has access: Anyone</strong>. Redeploy." },
+
+    { s:"Calendar events aren't created for new quotes (catering)",
+      c:"Calendar scope not granted, or a custom Calendar ID in Settings points at a calendar this account can't edit. Also: a quote with no <em>time</em> never gets an event, by design.",
+      f:"Run <code>testCalendarAccess</code> in the editor and grant Calendar. If Settings has a <code>Calendar ID</code>, confirm it's editable by this account; blank = the default calendar." },
+
+    { s:"The Heard Log / guest-recovery API returns errors after a rebuild",
+      c:"Its <code>SHEET_ID</code> still says <code>YOUR_SHEET_ID</code>, or <code>apiToken</code> / <code>alertEmails</code> weren't set, or the form is posting to the old URL/token.",
+      f:"Paste the sheet ID into <code>SHEET_ID</code> (Code.gs line 10), run <code>runFirstTimeSetup</code>, set <code>apiToken</code> + <code>alertEmails</code>, redeploy, and update the form/site that POSTs to it with the new URL + token." },
+
+    { s:"The tool's custom menu is missing from the Sheet",
+      c:"Three possibilities, in order of likelihood: you haven't reloaded since setup ran (the menu is built by <code>onOpen</code>, which only fires when the Sheet opens); permissions were never granted on this account; or you're looking at the wrong copy of the Sheet.",
+      f:"Close the tab and reopen the Sheet — that fixes it most of the time. If it's still missing, open Extensions → Apps Script, run <code>onOpen</code> manually and grant permissions, then reload the Sheet again." },
+
+    { s:"A tool is sending duplicate emails",
+      c:"Usually two copies of the same trigger — running a trigger-setup function twice on a version that doesn't clear the old one, or two copies of the whole tool both live and both scheduled.",
+      f:"Triggers page → delete every row → run the setup function once. Then confirm there isn't a second copy of the Sheet still deployed and running somewhere." },
+
+    { s:"Numbers look wrong / stale in a report",
+      c:"Before assuming a bug: check whether the source sheet actually got its weekly upload, and whether two different weeks got uploaded on top of each other.",
+      f:"Check the source data first — most “bugs” here are an upload that didn't happen or happened twice. Monday Huddle has a preflight guard for exactly this." }
+  ];
+
+  var TOOLS = [
+    { n:"catering-quote-tool", why:"Customer-facing — quotes go to schools and churches.", revive:"~45 min", b:["web"], pri:"p1",
+      what:"Builds, sends and tracks catering quotes for both restaurants — PDFs, emails, calendar events, tax-exempt form tracking, per-store supplies planning, driver assignment and hand-offs to partner stores. Customer-facing.",
+      setup:"<code>initializeSheet()</code> — safe to re-run.",
+      auto:"<strong class='hl'>Five separate installers — the most of any tool.</strong> <code>setupAutomationTrigger()</code> (3pm: confirmations, PO digest, year-end tax review) · <code>setupPoWarningTriggers()</code> (2pm + 6am urgent PO nudges) · <code>setupReminderTrigger()</code> (9am follow-ups) · <code>setupDisdReminderTrigger()</code> (Sat 12pm DISD recap) · plus a hand-made nightly trigger for <code>cleanOldQuotes</code>. Installing one installs none of the others.",
+      deploy:"<strong class='hl'>Yes.</strong> Three files: <code>Code.gs</code>, <code>Index</code> (=App.html), <code>TaxForm</code>. Access must be <strong class='hl'>Anyone</strong> so outside guests reach the upload page; the team uses <code>?view=app</code>. The <code>/exec</code> URL is baked into tax-form emails already sent.",
+      reauth:"Drive (tax PDFs), Calendar (event sync), Gmail. ⚠ Drive granular-consent trap — verify with <code>checkTaxFormAuth</code>.",
+      props:"Mostly self-heals — folder ID + tab names regenerate on setup. <strong class='hl'>Three things do not:</strong> <code>Recipe_BOM</code> and <code>Case_Conversions</code> (need <code>resetRecipeBom()</code> / <code>resetCaseConversions()</code>, which overwrite), the <code>Drivers</code> and <code>Partner Store</code> tabs (created empty — you fill them), and the <code>Start Address</code> setting (seeded with a placeholder).",
+      verify:"Open <code>?view=app</code>, save a test quote with a date <em>and</em> time → a Google Calendar event appears with a 🔴/🟢 title. Then open the Supplies tab for that date → the items break down into components.",
+      breaks:"Silently. Without triggers, no confirmations and no PO chasing — quotes still save fine, so nobody notices for weeks." },
+
+    { n:"payroll-system", why:"People get paid. Also on a personal account.", revive:"~30 min", owner:"Brent personal", loc:"→ move to org", b:["web","risk"], pri:"p1", risk:"on Brent's personal account",
+      what:"Payroll processing — pay periods, deductions, overtime, employee records, weekly summary emails and monthly backups.",
+      setup:"<code>runInitialSetup()</code>",
+      auto:"<strong class='hl'>Wired by setup — the only one-step tool.</strong> <code>runInitialSetup</code> also installs the weekly-summary, auto-archive and monthly-backup triggers.",
+      deploy:"<strong class='hl'>Yes.</strong>",
+      reauth:"Drive (backups), Gmail.",
+      props:"Self-heals — session tokens are ephemeral; real config lives in the sheet. The admin panel only customises schedules.",
+      verify:"Triggers page shows three rows after setup (sendWeeklySummaryEmail · runScheduledAnnualArchive · runScheduledBackup). Then <strong class='hl'>run <code>sendWeeklySummaryEmail</code> by hand</strong> and confirm the email lands — don't wait a week to find out. Then open the web app and log in with the manager passcode.",
+      breaks:"Two ways, both quiet. <strong class='hl'>Backups</strong> stop first and nothing tells you — <code>Backup_History</code> just stops growing, so a bad edit becomes unrecoverable weeks before anyone notices. The <strong class='hl'>weekly summary</strong> stops arriving and people assume it was cancelled. The processing screens keep working the whole time, which is why nobody reports it.",
+      todo:"⚠ <strong class='hl'>Move script + sheet to an org drive.</strong> Highest-priority item in this entire guide." },
+
+    { n:"schedule-counter-gas", why:"Weekly labor scheduling. Also on a personal account.", revive:"~30 min", owner:"Brent personal", loc:"→ move to org", b:["web","risk"], pri:"p1", risk:"on Brent's personal account",
+      what:"Labor scheduling — schedule upload, sales-curve weighting, weekly snapshots and productivity tracking.",
+      setup:"<code>initSheets()</code>",
+      auto:"Separate step: <code>installTriggers()</code> — installs sundayAlertCheck · mondayPipeline · thursdayScheduleReminder.",
+      deploy:"<strong class='hl'>Yes.</strong>",
+      reauth:"Gmail.",
+      props:"⚠ <strong class='hl'>Must re-seed manually</strong> — <code>ALERT_EMAIL</code> and <code>PAYROLL_SHEET_ID</code>. <code>initSheets</code> does <em>not</em> restore these, and nothing warns you.",
+      verify:"Triggers page shows three rows. Then confirm the tool can read payroll — if payroll numbers come back blank, <code>PAYROLL_SHEET_ID</code> is wrong.",
+      breaks:"The Monday pipeline is the critical path — if it doesn't run, the week's labor numbers never appear.",
+      todo:"⚠ Move to an org drive; re-point <code>PAYROLL_SHEET_ID</code> if payroll's sheet ID ever changes." },
+
+    { n:"guest-recovery-log (HEARD Log backend)", why:"Guest complaints; has a live form posting to it.", revive:"~30 min", loc:"hardcoded SHEET_ID", b:["standalone"], pri:"p2",
+      what:"Guest-complaint and recovery tracking. FOH leaders log issues from a phone or tablet, repeat complainers are flagged automatically, managers get a trends dashboard.",
+      setup:"<code>runFirstTimeSetup()</code> — idempotent; builds the data tab, headers and alert storage. Run only <em>after</em> pasting <code>SHEET_ID</code>.",
+      auto:"None — it's request-driven, not scheduled.",
+      deploy:"<strong class='hl'>Yes.</strong>",
+      reauth:"Gmail.",
+      props:"⚠ Re-seed <code>apiToken</code> + <code>alertEmails</code>. Standalone script — finds its sheet via a single hardcoded <code>SHEET_ID</code> constant (<code>Code.gs</code> line 10, one place to change).",
+      verify:"Submit one test entry from the actual form/site — not from the editor. It should land as a new row and, if it's a repeat guest, raise the flag.",
+      breaks:"⚠ <strong class='hl'>An external form/site POSTs to this.</strong> Redeploying changes the <code>/exec</code> URL, and the poster must be updated with the new URL <em>and</em> token or logging silently fails with nobody noticing.",
+      note:"⚠ Breaks the “copy sheet + run setup” model — the only tool that does. The repo copy is a sanitised template; the real ID and token exist only in the deployed private copy." },
+
+    { n:"training-tracker", why:"Certification tracking; alerts stop silently.", revive:"~15 min", b:["menu"], pri:"p2",
+      what:"Training management — automates training timelines, tracks position-by-position progress, detects certification-ready team members and sends email alerts.",
+      setup:"<code>runInitialSetup()</code>",
+      auto:"<strong class='hl'>Two parts, and the second one has no setup function.</strong> Run <code>setupAllTriggers()</code> for the three time-based jobs (dailyReminderCheck · checkInactiveTrainees · mondayAutoPopulate). Then add the <strong class='hl'>form-submit triggers by hand</strong>: Triggers page → Add trigger → function <code>onFormSubmit</code>, event source <em>From spreadsheet</em>, type <em>On form submit</em> — and again for <code>onCertificationFormSubmit</code>. Nothing in the code installs these.",
+      deploy:"No — runs from the Sheet menu.",
+      reauth:"Gmail.",
+      props:"Self-heals.",
+      verify:"<strong class='hl'>Five trigger rows, not three</strong> — the three time-based ones plus <code>onFormSubmit</code> and <code>onCertificationFormSubmit</code>. Then submit one real test entry through the Google Form and watch it appear in <code>Daily Training Log</code> and move the <code>Master Dashboard</code>. Three rows and a working menu is <em>not</em> a healthy tool.",
+      breaks:"Silently, and the trap is specific: <code>onFormSubmit</code> is the entire engine, and <code>setupAllTriggers()</code> does not install it. Restore the three time-based triggers and everything looks correct — menu present, no errors — while every form submission goes nowhere. Certification alerts stop and nobody reports a missing email.",
+      note:"The Google Form must also still be linked to this Sheet. A re-created Form needs its trigger re-pointed at the new one." },
+
+    { n:"Monday Morning Huddle Reporting", why:"Weekly leadership reporting.", revive:"~15 min", b:["menu"], pri:"p2",
+      what:"Schedule variance analysis across two locations — planned vs actual hours, weekly leadership reports.",
+      setup:"<code>initializeSheet()</code> — menu: <em>Initialize Sheet (first-time setup)</em>.",
+      auto:"Separate step: <code>setupWeeklyArchiveTrigger()</code> — menu: <em>Setup Weekly Archive</em>. The <strong class='hl'>only</strong> time trigger; all reporting is manual menu actions.",
+      deploy:"No.",
+      reauth:"Gmail.",
+      props:"Self-heals.",
+      verify:"Run one report from the menu end-to-end and eyeball the numbers against the source upload.",
+      breaks:"Bad data rather than no data — a doubled or missing weekly upload skews the report. A preflight guard exists for the multi-week upload case; trust the numbers only after checking the upload happened once." },
+
+    { n:"foh-links-menu", why:"Convenience + Sunday reset.", revive:"~10 min", b:["menu"], pri:"p3",
+      what:"One-click access for FOH team members to every link they need (training docs, forms, schedules) from a custom menu and sidebar — plus an automatic Sunday reset that wipes the week's day sheets back to clean templates.",
+      setup:"<code>runInitialSetup()</code> + <code>setupSettingsSheet()</code>",
+      auto:"Separate step: <code>setupResetTrigger()</code> — or menu <em>Sheet Reset → Setup Sunday Auto-Reset</em> (weekly).",
+      deploy:"No.",
+      reauth:"Gmail.",
+      props:"Self-heals — <code>linkUrlMap</code> is only a cache rebuilt from the Links sheet on every open. The link data itself lives in the sheet.",
+      verify:"Open the Sheet, use the menu, confirm a link opens. For the reset, check the trigger row exists before relying on Sunday.",
+      breaks:"The Sunday reset is the risky half — if it fires against the wrong tabs it wipes a week. Confirm the template tabs are right before enabling.",
+      note:"No README exists for this tool — this card is its documentation." },
+
+    { n:"shared-table-email-summary", why:"Waste summary emails.", revive:"~10 min", b:["menu"], pri:"p3",
+      what:"Automated waste summary emails built from Google Form responses.",
+      setup:"Menu-driven (<code>onOpen</code>). Config self-heals via <code>ensureConfigRow</code>; settings are edited in the sidebar.",
+      auto:"Separate step: <code>createDailyTrigger()</code> (onDailyTrigger).",
+      deploy:"No.",
+      reauth:"Gmail.",
+      props:"Self-heals.",
+      verify:"Trigger the summary manually once and confirm the email arrives with real numbers in it.",
+      breaks:"⚠ Reads a <strong class='hl'>Google Form's response sheet that setup does not create</strong>. If the Form is recreated or its response tab renamed, this silently summarises nothing.",
+      note:"The installer is named <code>createDailyTrigger</code> while the output reads as a weekly digest — confirm the cadence you actually want on revival rather than assuming from the name." },
+
+    { n:"adoption-tracker", why:"⚠ Never actually wired up — see its card before spending any time on it.", revive:"decide first", b:["menu","dead"], pri:"p3",
+      what:"Answers one question every Monday: which tools did people actually open last week? Reporting only — nothing else depends on it running.",
+      status:"<strong class='hl'>This tool has never run.</strong> The code was written and the ping helper was added to seven other tools, but the <em>Tool Adoption</em> Google Sheet was never created and <code>ADOPTION_SHEET_ID</code> is set nowhere — so every ping is a silent no-op and no digest has ever been sent. Nothing is broken and nothing depends on it. <strong class='hl'>Decide before reviving:</strong> either do the wiring below, or retire it (see <em>Retiring a tool</em>) and delete this card. Do not treat it as an outage.",
+      setup:"<code>runInitialSetup()</code>",
+      auto:"Separate step: <code>createWeeklyTrigger()</code> (sendWeeklyAdoptionDigest).",
+      deploy:"No.",
+      reauth:"Gmail.",
+      props:"None.",
+      verify:"Run the digest manually — it should list tools with usage counts. Zero counts everywhere means the pings aren't arriving, not that nobody used anything (which is exactly the state it's in today).",
+      breaks:"Harmlessly. You lose visibility, not function. It is currently in that state permanently.",
+      note:"To actually turn it on: create a Sheet named <code>Tool Adoption</code> → paste <code>Code.gs</code> → <code>runInitialSetup()</code> → set <em>Digest Email</em> on its Settings tab → <code>createWeeklyTrigger()</code> → then, in <strong class='hl'>each</strong> other tool's Apps Script project, add Script Property <code>ADOPTION_SHEET_ID</code> = that sheet's ID. Miss the last step in a tool and that tool simply never appears in the digest." }
+  ];
+
+  // ── PER-TOOL DEEP DIVES ─────────────────────────────────────────────
+  // Full "Go deeper" text from each tool's GUIDE.md, embedded so this page
+  // stays self-contained. Regenerate from the repo GUIDE.md files if they change.
+  var DEEPER = {
+  "catering-quote-tool": "<h4>The data model — it's all in the Google Sheet</h4><p>There's no separate database. Every tab is a table the code reads and writes.</p><ul class=\"plain\"><li><strong class=\"hl\"><code>Quotes</code></strong> — one row per quote, <strong class=\"hl\">26 columns</strong>. Most fields get their own column: customer, contact, phone, email, order type, delivery address, subtotal, tax rate used, tax amount, total, tax-exempt flag, <code>Location Name</code>, PO number, event date, event time, calendar event id, last-modified, the order-level discount value/type, and quote notes. <strong class=\"hl\">The line items are stored as JSON text in a single cell</strong> — an array of <code>{description, quantity, price, discount}</code> — so one quote is always exactly one row no matter how many items it has. <code>Location Name</code> is how a saved quote remembers which restaurant it was for; the PDF later maps that name back to the store's address and phone — and it's also what the Supplies tab groups by.<br>The last three columns were added over time and are all <strong class=\"hl\">blank-safe by design</strong> — an old row with an empty cell reads as a sensible default, so no backfill was ever needed: <strong class=\"hl\">24 <code>Status</code></strong> (blank = Active), <strong class=\"hl\">25 <code>Handoff Store</code></strong> (blank = not handed off), <strong class=\"hl\">26 <code>Driver</code></strong> (blank = unassigned). None of them are written by the main save path — <code>saveQuote</code> still writes a fixed 23-column block, and each of these has its own targeted single-cell writer (<code>setQuoteStatus</code>, <code>setHandoffStore</code>, <code>assignDriver</code>). That's deliberate: it keeps the save path from having to know about every column that gets bolted on later.</li><li><strong class=\"hl\"><code>Recipe_BOM</code></strong> — Menu Item | Component | Qty per Unit. One row per component. The Supplies engine matches on the <strong class=\"hl\">full item name, lowercased</strong> — no fuzzy matching, on purpose, so a wrong match can never quietly inflate an order.</li><li><strong class=\"hl\"><code>Case_Conversions</code></strong> — Component | Per Case | Per Bag. Turns raw counts into \"≈ 2.4 cases\". Per Bag is optional; blank hides the bag figure. Note the cases/bags numbers are computed <strong class=\"hl\">at runtime</strong>, not stored — change a conversion and every past date recalculates.</li><li><strong class=\"hl\"><code>Supplies_Reference</code></strong> — Section | Item | Detail. The editable notes shown on the Reference sub-tab; a blank Item makes a full-width note.</li><li><strong class=\"hl\"><code>Drivers</code></strong> — one name per row, team-editable.</li><li><strong class=\"hl\"><code>Partner Store</code></strong> — Store Location | Operator Name | Store Phone | Store Email | Catering POC. One row per store you might hand off to.</li><li><strong class=\"hl\"><code>&lt;prefix&gt; Menu</code></strong> (default <code>CH Menu</code> / <code>DBU Menu</code>) — Category | Item Name | Pickup Price | Delivery Price. <code>N/A</code> or blank in a price column hides that item from that order type. Category groups items in the picker.</li><li><strong class=\"hl\"><code>&lt;prefix&gt; Off-Menu</code></strong> (default <code>CH Off-Menu</code> / <code>DBU Off-Menu</code>) — Item | Base Price. The delivery price you see is computed live as base × (1 + markup%), rounded to the nearest tenth — never stored, so changing the markup reprices the whole list at once.</li><li><strong class=\"hl\"><code>Settings</code></strong> — every tunable value as a key/value pair, read at runtime, so a change takes effect with no redeploy.</li><li><strong class=\"hl\"><code>Quote_Sequence</code></strong> — a single running counter, so quote IDs never repeat even across edits.</li><li><strong class=\"hl\"><code>Tax_Exempt_Registry</code></strong> — one row per organization: a status and a link to the form PDF in Drive.</li><li><strong class=\"hl\">Hidden tabs</strong> — <code>Quotes_Archive</code> (aged-out quotes), <code>Quote_Revisions</code> (prior versions of edited quotes), <code>Tax_Forms</code> (per-quote status), <code>Tax_Form_Uploads</code> (the guest pending queue), <code>Geocode_Cache</code> (address → lat/lng, so repeat addresses never re-hit the Maps quota), and one append-only log per automation so nothing ever double-sends: <code>Confirmations_Sent</code>, <code>PO_Alerts_Sent</code>, <code>PO_Warn_DayBefore_Sent</code>, <code>PO_Warn_DayOf_Sent</code>, <code>DISD_Weekly_Sent</code>. <code>Reminders_Sent</code> (visible) does the same job for follow-ups.<br>The dedup pattern is worth knowing if you add an automation: each log is append-only, keyed on <code>quoteId</code> or <code>quoteId|eventDate</code>, and read into a lookup before the send loop. Keying on quote+date rather than quote alone is what lets a re-quote for a <em>new</em> date legitimately alert again while the same order never alerts twice.</li></ul><h4>The life of a quote</h4><ol class=\"steps\"><li><strong class=\"hl\">Draft.</strong> The form validates the required fields and asks the server for the next ID — the running counter, with the contact's initials appended (<code>Q-2026-0042-KD</code>).</li><li><strong class=\"hl\">Save.</strong> The server writes the row. Line items are JSON-encoded into one cell; totals, discounts, and tax are computed and stored so history and the PDF never have to recompute.</li><li><strong class=\"hl\">PDF.</strong> The quote is built as an HTML document and converted to PDF — the <em>same</em> HTML the on-screen preview and the print window use, so what you see is what sends.</li><li><strong class=\"hl\">Email.</strong> \"Save &amp; Email\" sends the PDF with your Settings email template (subject/body with <code>{{placeholders}}</code>), optionally BCC'ing whoever you set.</li><li><strong class=\"hl\">Calendar.</strong> If the quote has a date and time, a color-coded Google Calendar event is created and its id is stored on the row — so a later edit updates that event instead of creating a duplicate.</li><li><strong class=\"hl\">Edit.</strong> Editing copies the outgoing version to <code>Quote_Revisions</code> first — nothing is ever truly overwritten — then writes the new values. You can view and restore any prior version from the quote's popup.</li><li><strong class=\"hl\">Expire / archive.</strong> Every PDF shows a \"valid through\" date (Settings-tunable). Quotes past the archive threshold are moved to the hidden archive by the nightly job — moved, never deleted.</li></ol><h4>How pricing works</h4><p>A line item's price comes from the selected store's menu, keyed by the current order type — pickup vs delivery — with <code>N/A</code>/blank hiding unavailable items from that mode. Off-menu items price live off base × markup. On top of line items you can apply per-line discounts and one order-level discount (percent or dollar). Tax uses the Settings default rate (editable per quote); marking a quote tax-exempt zeroes the tax and ties into the registry. Switching order type <em>or</em> store re-prices every line against the new context (with a confirm), and leaves any item that isn't on the new menu at its typed price.</p><h4>Two restaurants, in detail</h4><ul class=\"plain\"><li><strong class=\"hl\">Tab names are operator-chosen.</strong> <code>Store 1/2 Tab Prefix</code> in Settings (default CH/DBU) feed <code>&lt;prefix&gt; Menu</code> / <code>&lt;prefix&gt; Off-Menu</code>. <code>initializeSheet</code> renames the tabs <em>in place</em> when the prefix changes — it tracks the last-applied name in Script Properties — so a rename never loses data or leaves an orphaned empty tab.</li><li><strong class=\"hl\">Both menus preload.</strong> On load the app pulls both stores' menus into memory, so switching restaurants (and editing/reordering a past quote into its store) is instant, no round-trip.</li><li><strong class=\"hl\">Fast lookups.</strong> Menu items are indexed by name (a hash map, first-row-wins on duplicates), so repricing a whole quote or matching a reordered quote's items is one lookup per line instead of a scan of the whole menu.</li><li><strong class=\"hl\">The quote remembers its store</strong> via <code>Location Name</code>; edit/reorder reads that back to switch stores; the PDF resolves it to the store's address and phone.</li></ul><h4>The quarterly price check</h4><p>On load, if it's been longer than <code>Price Check Interval (Days)</code> (default 90) since the active store's last verification, the app locks until the operator types the current POS prices for three menu items and they match. It's <strong class=\"hl\">per store</strong> — separate <code>Last Price Verification</code> dates — and it <strong class=\"hl\">skips a store whose menu is empty</strong>, so an unconfigured second store never wedges the lock. The three items are drawn from the categories listed in Settings (falling back to the whole menu if that's too narrow), always including a delivery-priced item; a typed price passes if it matches <em>any</em> menu row with that name, so a duplicate item name can't jam it.</p><h4>Tax-exempt tracking</h4><p>A tax-exempt quote can look the org up in the registry or send the guest an upload link. The guest page is public (<code>?view=taxform</code>), no login; their PDF lands in a Drive folder and shows up as a <em>pending</em> row on the Tax Forms tab. A human confirms it into the registry under the canonical org name — the app never auto-matches names, on purpose, so a slightly different spelling can't create a silent duplicate. The Guest Upload Link on that tab is that same public page, copyable to hand out directly. Access is <strong class=\"hl\">Anyone</strong> so outside guests can reach it; the team tool is URL-gated (<code>?view=app</code>), not login-walled — so don't post the team link publicly.</p><h4>The automations</h4><p>Each is installed separately — <strong class=\"hl\"><code>initializeSheet</code> creates no triggers at all</strong> — each has its own on/off switch, and each is wrapped so a failure emails an alert instead of dying silently. Every installer deletes its own old trigger before creating a new one, so re-running never doubles up, and each has a matching <code>remove…Trigger()</code>.</p><table><thead><tr><th>When</th><th>Handler</th><th>Does</th></tr></thead><tbody><tr><td>Daily 3pm</td><td><code>dailyCateringAutomation</code></td><td>Day-before confirmations, missing-PO digest, and (once, at year-end) the tax-exempt review</td></tr><tr><td>Daily 2pm + 6am</td><td><code>poWarningDayBefore</code> / <code>poWarningDayOf</code></td><td>Urgent \"still no PO\" nudges for tomorrow's and today's orders</td></tr><tr><td>Daily 9am</td><td><code>processReminders</code></td><td>Follow-up on quotes that haven't been acted on</td></tr><tr><td>Saturday 12pm</td><td><code>disdWeeklyReminder</code></td><td>Weekly DISD recap — guest + total only, no line items</td></tr><tr><td>Nightly</td><td><code>cleanOldQuotes</code></td><td>Archives quotes past the age threshold (moved, never deleted)</td></tr></tbody></table><p>The urgent PO warnings are deliberately <strong class=\"hl\">separate from</strong> the 7-day sweep and keep their own logs, so an order that already got the early heads-up still gets the day-before and day-of nudges.</p><h4>The Supplies Calc, in detail</h4><p><code>getSuppliesForDate(dateStr)</code> is the whole engine:</p><ol class=\"steps\"><li>Pull every quote on that date whose status isn't <code>Inactive</code>.</li><li>Any quote with a non-blank <code>Handoff Store</code> is pulled out into a separate <code>handedOff</code> list — shown for visibility, <strong class=\"hl\">never counted</strong>.</li><li>The rest are bucketed by <code>Location Name</code>, so each restaurant gets its own totals. The bucketing is list-driven off whatever store names it actually finds — nothing hardcodes \"two stores\", so a third would just appear.</li><li>Per bucket, each line item is matched against <code>Recipe_BOM</code> by lowercased full name and exploded into components × quantity. <strong class=\"hl\">No match = no guess</strong> — it goes to that store's <code>noRecipe</code> list with its count intact.</li><li>Components are joined to <code>Case_Conversions</code> for the \"≈ cases\" figure, and tagged for highlighting.</li></ol><p>The red/yellow highlighting is driven by a small <strong class=\"hl\">component → tag</strong> map (<code>supplyTagMap_</code>), not by hardcoding rows in the UI: raw proteins get <code>protein</code> (red), mac bags get <code>thaw</code> (yellow). To flag something new, add it to that map — the client just reads the tag off each row.</p><p><strong class=\"hl\">The gotcha:</strong> because matching is exact, a menu rename silently moves an item into the ⚠️ no-recipe list rather than breaking anything. That list is the health check — if it's growing, <code>Recipe_BOM</code> has drifted from the menu.</p><p><strong class=\"hl\">The other gotcha:</strong> <code>initializeSheet</code> will <em>not</em> reseed a non-empty <code>Recipe_BOM</code> or <code>Case_Conversions</code>. New recipe data only lands via <code>resetRecipeBom()</code> / <code>resetCaseConversions()</code>, which overwrite the whole tab. That's a deliberate trade — it protects hand-edits from a routine setup re-run, at the cost of making recipe updates an explicit, destructive step.</p><h4>Hand-off and driver</h4><ul class=\"plain\"><li><strong class=\"hl\">Hand-off</strong> is just column 25 plus a contacts tab. Setting it removes the order from that store's supplies totals immediately — that's the entire mechanism, and it's why the totals can be trusted the morning of.</li><li><strong class=\"hl\">The hand-off email is a draft, never auto-sent.</strong> <code>buildHandoffEmailDraft</code> fills a Settings template and hands subject/body back to the same preview modal the quote email uses; a human edits and sends. Outbound mail to another operator is exactly the kind of thing that shouldn't fire on a checkbox. It sends plain (no quote PDF attached).</li><li><strong class=\"hl\">The distance nudge</strong> reuses the geocoding already built for delivery-route suggestions: <code>geocodeAddress_</code> (cached in <code>Geocode_Cache</code>) + <code>haversineMiles_</code>. It's straight-line distance, not driving distance — a hint, not a routing engine — and it never blocks a save.</li><li><strong class=\"hl\">The driver goes into the calendar title</strong>, and <em>how</em> matters. Titles are <code>&lt;prefix&gt; — &lt;customer&gt; — &lt;date&gt;</code>, and <code>updateCalendarEventPO</code> recovers the customer and date by splitting on that <code> — </code>. So the driver is embedded <strong class=\"hl\">inside the customer segment</strong> as <code>Smith Elementary-\"Marcus\"</code>, not as a fourth segment — the split still yields three parts and the driver rides along untouched when the PO changes. If you ever extend the title again, do the same thing: enrich a segment, don't add a delimiter.</li><li>A normal quote edit rebuilds the title from form data, which has no driver on it — so <code>updateCalendarEvent</code> re-reads the existing title and carries the driver forward. Without that, editing an order would silently drop the driver.</li></ul><h4>Gotchas and hard-won lessons</h4><ul class=\"plain\"><li><strong class=\"hl\"><code>google.script.run</code> nulls any return value that contains a Date object.</strong> It once nulled the whole settings payload and hung the app on \"Loading…\". Every server function that returns sheet values keeps dates as <code>yyyy-MM-dd</code> <strong class=\"hl\">strings</strong> — if you add one, do the same.</li><li><strong class=\"hl\">Sheets auto-converts date-like strings into date cells.</strong> Writing a date-shaped setting uses <code>setNumberFormat('@')</code> (the <code>asText</code> flag on <code>updateSetting</code>) to stop that.</li><li><strong class=\"hl\">The <code>index.html</code> trap.</strong> The repo's <code>index.html</code> is the GitHub Pages landing page, NOT the app. <code>App.html</code> is what goes in the Apps Script <code>Index</code> file — paste the landing page there and the web app \"takes you to GitHub.\"</li><li><strong class=\"hl\">The link serves the last <em>published</em> version</strong>, not your latest paste — always publish a new version.</li><li><strong class=\"hl\">Config lives in the Sheet, on purpose</strong>, so a non-technical person can run this forever without touching code.</li><li><strong class=\"hl\">Adding a Quotes column is a four-touch change</strong>, and skipping one is the usual bug: widen the read cap in <code>getQuotes</code>, map the new index with a blank-safe default, add it to <em>both</em> the fresh-header list and the migration map in <code>initializeSheet</code>, and give it its own targeted writer. Don't widen <code>saveQuote</code>'s fixed 23-column write — that's what keeps old rows and new columns from fighting.</li><li><strong class=\"hl\">Anything appended to a calendar title has to survive <code>updateCalendarEventPO</code>'s <code> — </code> split.</strong> Enrich an existing segment; never add a delimiter.</li><li><strong class=\"hl\">SMS was considered and dropped.</strong> Apps Script has no native SMS, so it would mean a paid third party (Twilio) or unreliable carrier email gateways. Every notification here is email on purpose — if someone asks \"can it text me\", that's the answer and the reason.</li></ul><h4>Deploy model</h4><p>No auto-sync. Three files: <code>Code.gs</code> → <code>Code.gs</code>; <code>App.html</code> → the Apps Script file named <strong class=\"hl\"><code>Index</code></strong>; <code>TaxForm.html</code> → <strong class=\"hl\"><code>TaxForm</code></strong>. Run <code>initializeSheet()</code> once, then <strong class=\"hl\">Deploy → Manage deployments → Edit → New version</strong>, access <strong class=\"hl\">Anyone</strong>. The <code>?view=</code> tag routes the one URL: <code>app</code> = team, <code>taxform</code> = guest, bare = landing.</p><p><strong class=\"hl\">What <code>initializeSheet</code> does and doesn't do</strong> — worth being precise, because \"just re-run setup\" is the standard fix for a lot of things:</p><p><em>It is genuinely idempotent.</em> It creates any missing tab, adds Settings keys that don't exist yet (never overwriting ones that do), adds missing <code>Quotes</code> column headers in place, and leaves every row of data alone. Re-run it as often as you like.</p><p><em>It does not:</em></p><ul class=\"plain\"><li><strong class=\"hl\">install any triggers</strong> — every automation is its own <code>setup…Trigger()</code> call</li><li><strong class=\"hl\">reseed a non-empty <code>Recipe_BOM</code> / <code>Case_Conversions</code></strong> — that's <code>resetRecipeBom()</code> / <code>resetCaseConversions()</code>, which overwrite</li><li><strong class=\"hl\">fill <code>Drivers</code> or <code>Partner Store</code></strong> — it creates them empty for you to fill</li><li><strong class=\"hl\">redeploy anything</strong> — the <code>/exec</code> URL still serves the last published version</li></ul>",
+  "payroll-system": "<h4>Who gets in, and how</h4><p>The app is gated by an <strong class=\"hl\">access code</strong>, not a Google login. <code>doGet(e)</code> reads <code>?view=</code> and a session token; on a correct code the server issues a token (held in <code>CacheService</code>) and routes you to the requested screen. There are two levels — a manager passcode and an admin-access passcode (<code>AdminPasscode</code> / <code>AdminAccessPasscode</code> in <code>Payroll_Settings</code>), auto-generated on first use and emailed to admins. Employees never log in at all — PTO and uniform requests come through their own public form pages (<code>EmployeePTORequest</code>, <code>EmployeeUniformRequest</code>). Shared writes are wrapped in <code>LockService</code> so two managers saving at once can't corrupt a row.</p><h4>The screens</h4><p>One deployment, many views, each its own <code>View_*</code> HTML file routed by <code>?view=</code>: dashboard, OT upload / history / trends / reconciliation / by-employee, PTO records / summary, uniform catalog / orders / deductions / summary, payroll calendar, year-end wizard, settings, system health, and help.</p><h4>The data model</h4><p>Everything is Google Sheet tabs:</p><ul class=\"plain\"><li><strong class=\"hl\"><code>Employees</code></strong> + <strong class=\"hl\"><code>Archive_Employees</code></strong> — the active roster and the archive of removed people.</li><li><strong class=\"hl\"><code>OT_History</code></strong> — every uploaded overtime record.</li><li><strong class=\"hl\"><code>PTO</code></strong> + <strong class=\"hl\"><code>PTO_Requests</code></strong> — the request queue and the records.</li><li><strong class=\"hl\"><code>Uniform_Catalog</code></strong> + <strong class=\"hl\"><code>Uniform_Orders</code></strong> + <strong class=\"hl\"><code>Uniform_Order_Items</code></strong> — the catalog, the order headers, and the order line items (normalized: one order row, many item rows), which feed the deductions.</li><li><strong class=\"hl\"><code>Payroll_Settings</code></strong> (codes + payroll config) and <strong class=\"hl\"><code>Settings</code></strong> (general config) — operator-editable, read at runtime.</li><li><strong class=\"hl\"><code>System_Counters</code></strong> — running counters for IDs.</li><li><strong class=\"hl\">Audit + safety tabs</strong> — <code>Activity_Log</code>, <code>Employee_Audit_Log</code>, <code>Comments</code>, <code>Backup_History</code> keep a trail and a restore point.</li></ul><h4>The archive invariant</h4><p>Removing an employee <strong class=\"hl\">moves</strong> them to <code>Archive_Employees</code> — never deletes — and if that person is re-added, the app restores them from the archive instead of creating a fresh, history-less record. There are two restore paths in the code that both have to honor this, so if you touch employee add/remove, keep the auto-restore intact or you'll orphan someone's OT and deduction history.</p><h4>PTO balances are deliberately NOT here</h4><p>Your HR system owns the actual balance math. This tool records the <em>requests</em> and their status — it does not compute how many hours someone has left. Don't rebuild balance tracking here; it would only drift from the system of record.</p><h4>Uniforms → deductions, with one source of truth</h4><p>An employee orders from <code>Uniform_Catalog</code>; the order is stored as a header (<code>Uniform_Orders</code>) plus its line items (<code>Uniform_Order_Items</code>); those drive the payroll deductions. Payday dates and the deduction amounts are computed by <strong class=\"hl\">shared helper functions</strong>, so the dashboard, the deductions screen, and the summaries always agree. If you change how a deduction or a payday is calculated, change the helper — never re-derive it on a screen.</p><h4>The automations</h4><p>Three time-driven jobs, each with its own install/remove utility:</p><ul class=\"plain\"><li><strong class=\"hl\"><code>runScheduledAnnualArchive</code></strong> (<code>setupAutoArchiveTriggers</code>) — the year-end roll.</li><li><strong class=\"hl\"><code>runScheduledBackup</code></strong> (<code>setupBackupTrigger</code>) — snapshots into <code>Backup_History</code> so there's always a restore point.</li><li><strong class=\"hl\"><code>sendWeeklySummaryEmail</code></strong> (<code>setupWeeklySummaryTrigger</code>) — the weekly recap.</li></ul><h4>Gotchas</h4><ul class=\"plain\"><li><strong class=\"hl\">The link serves the last <em>published</em> version</strong>, not your latest paste — always publish a new version.</li><li><strong class=\"hl\">Two config tabs.</strong> Codes and payroll specifics live in <code>Payroll_Settings</code>; general settings in <code>Settings</code>. Know which one you're editing.</li><li><strong class=\"hl\">Config lives in the Sheet, on purpose</strong>, so a non-technical manager can keep it running without touching code.</li></ul><h4>Deploy model</h4><p>No auto-sync. This is the biggest tool in the set — paste the numbered <code>.gs</code> modules and every <code>View_*</code> / <code>MainApp*</code> HTML file into their matching Apps Script slots, then publish a <strong class=\"hl\">new version</strong>. Multi-location is built in: the OT monitor spans every location you configure in Settings.</p>",
+  "schedule-counter-gas": "<h4>The Monday pipeline is the engine</h4><p>Everything real happens in one weekly job, <code>mondayPipeline</code> (Monday 6 AM), which runs a numbered sequence with a check at each step and one big try/catch that emails an alert if anything throws:</p><ol class=\"steps\"><li><strong class=\"hl\">Validate <code>Sheet1</code></strong> — the raw upload landing tab. No sales data → alert and stop.</li><li><strong class=\"hl\">Read <code>Sheet1</code></strong> into a payload.</li><li><strong class=\"hl\">Detect the week start</strong> from the payload's dates.</li><li><strong class=\"hl\">Archive</strong> the week to <code>sales_history</code> (tagged <code>sales_source = 'api'</code>).</li><li><strong class=\"hl\">Smoothing update</strong> — fold the new week into <code>sales_curves</code>.</li><li><strong class=\"hl\">Bias detection</strong> — recompute <code>bias_flags</code> in <code>config</code>.</li><li><strong class=\"hl\">Cleanup</strong> — delete history rows older than 90 days.</li><li><strong class=\"hl\">Clear <code>Sheet1</code></strong> so it's ready for the next upload.</li></ol><p>8.5. <strong class=\"hl\">Refresh actuals calibration</strong> — a hook that's present but dormant; it's a silent no-op unless wired, and if it ever fails it degrades to the configured goal rather than aborting the run.</p><ol class=\"steps\"><li><strong class=\"hl\">Build and write <code>app_cache</code>.</strong></li></ol><p>That \"validate → process → archive → cleanup → cache, alert on failure\" shape is the same pattern across these tools.</p><h4>How the forecast is actually computed</h4><p>Not a flat average. <code>sales_curves</code> describe how each day of the week actually flows, and the prediction is a <strong class=\"hl\">linearly-weighted moving average with outlier exclusion and a trend adjustment</strong> — recent weeks count more, a genuinely weird day is dropped before it can skew the curve (<code>curve_outlier_pct</code>, default 30%), and a trend nudge is applied but <strong class=\"hl\">capped at ±10%</strong> of the LWMA so it can't run away. This replaced an earlier exponential smoothing (<code>smoothing_alpha</code>, default 0.3, still in config); both live in <code>config</code> so you can tune them without code. Bias detection watches whether the forecast is consistently over or under and flags it.</p><h4>The cache tab</h4><p><code>app_cache</code> holds a pre-computed JSON blob in cell A1 — the web page reads that one cell instead of recomputing the whole forecast on every load (the app_cache pattern: seconds → milliseconds). The pipeline rebuilds it at step 9; the reader falls back to <code>getConfig()</code> if the cache is empty or unparseable, so a missing cache degrades instead of breaking. Never hand-edit it.</p><h4>The tabs</h4><p><code>Sheet1</code> (the raw weekly upload), <code>config</code> (settings + <code>bias_flags</code>), <code>sales_curves</code> (the day-of-week shapes the forecast leans on), <code>sales_history</code> (the archived weeks that feed it, pruned to 90 days), <code>productivity_tracker</code> (the weekly scores), <code>app_cache</code> (the JSON snapshot). <code>initSheets()</code> builds them all and is safe to re-run.</p><h4>The three triggers</h4><p>Sunday 10 PM <code>sundayAlertCheck</code> (upload reminder), Monday 6 AM <code>mondayPipeline</code> (the engine above), Thursday 7 PM <code>thursdayScheduleReminder</code>. Installed by <code>installTriggers()</code>, removed by <code>deleteAllTriggers()</code> — both check for existing triggers so they don't duplicate.</p><h4>Deploy model</h4><p>No auto-sync. Paste <code>Code.gs</code> + the HTML files, set the <code>ALERT_EMAIL</code> script property (so failures reach you), run <code>initSheets()</code> then <code>installTriggers()</code>, then publish. The link serves the last <em>published</em> version — republish after edits.</p>",
+  "guest-recovery-log (HEARD Log backend)": "<h4>Two pieces, one link</h4><p>The frontend is a self-contained React app (loaded from a CDN, no build step) — it can live anywhere. The backend is an Apps Script web app bound to the Sheet. The frontend calls the backend URL for every read and write; it never has direct access to the Sheet. That's the privacy boundary — only the deployed endpoint can touch the data, so hosting the form publicly doesn't expose the log.</p><h4>How the two pieces actually talk</h4><p>The backend has a <code>doGet</code> and a <code>doPost</code>, both gated by a token (<code>requireAuth_</code>) — that's the passcode layer, so a random hit on the URL can't read or write. Reads go through <code>doGet</code> with an <code>action</code> (e.g. <code>checkPhone</code> for the repeat lookup, <code>getEmailSettings</code>); writes go through <code>doPost</code> with an <code>action</code> (<code>add</code> / edit / delete a complaint). There's a small <strong class=\"hl\">field-alias</strong> layer so the frontend can speak its own names (<code>phone</code>, <code>timestamp</code>) while the sheet stores its columns (<code>phoneNumber</code>, <code>dateSubmitted</code>) — handy to know if a field ever looks like it \"didn't save,\" it may just be an alias mismatch.</p><h4>The data</h4><p>One tab (<code>Sheet1</code>) is the database; the header row is <code>id, phone, guestName, orderNumber, orderType, issueType, resolution, notes, dateOccurred, timestamp, managerName, dayPart, resolved</code>, built on first-time setup (and auto-created on first submit, so there's no schema step). <code>runFirstTimeSetup()</code> wires the tab, headers, and alert storage; it's idempotent.</p><h4>Repeat detection + alerts, by the numbers</h4><p>Two constants at the top of <code>Code.gs</code> drive it: <code>REPEAT_WINDOW_DAYS</code> (30) and <code>ALERT_THRESHOLD</code> (4). When a phone is entered, the backend counts that number's complaints inside the rolling window and badges the guest; when a new complaint pushes a guest to the threshold <em>within</em> the window, it emails the alert list. <strong class=\"hl\">These two numbers must match the wording the frontend shows guests</strong> — a code comment flags this, and it's the one spot where the number in the UI and the number in the logic can silently drift apart.</p><h4>Two copies, on purpose</h4><p>There's a public/template version (this repo, with <code>SHEET_ID = 'YOUR_SHEET_ID'</code>) and your private live version (with the real sheet ID and your settings). They are NOT meant to be identical. Never force them into sync — that's how a private sheet ID or alert config leaks into the public copy.</p><h4>The frontend's one dependency</h4><p>It pulls React/Babel from a CDN at load. If you ever fork or update it and it white-screens, check the CDN script versions are pinned to known-good ones — an unpinned major version has broken it before.</p><h4>Deploy model</h4><p>Publish the backend as a <strong class=\"hl\">new version</strong> after any <code>Code.gs</code> change (the URL serves the last published version), and set <code>SHEET_ID</code> at the top before running <code>runFirstTimeSetup()</code>. The form points at that URL, and the deployment access has to let whoever's logging reach it.</p>",
+  "training-tracker": "<h4>The engine is one trigger: <code>onFormSubmit</code></h4><p>The one thing humans do is submit the Google Form. That fires an installable <strong class=\"hl\">form-submit trigger</strong> (<code>onFormSubmit</code>), and everything cascades from there: the entry lands in <code>Daily Training Log</code>, the trainee's name is de-duplicated, the <code>Master Dashboard</code> recomputes, the timeline and <code>Training Schedule</code> update, the certification check runs, and any alert that just became true fires. So if things stop updating, the first thing to check is that the form-submit trigger is still installed and pointed at the right form.</p><h4>How the code is organized</h4><p>The script is split by responsibility across numbered files, which is the map for changing one thing without touching the rest: <code>01_Menu_and_Setup</code> (the custom menu + tab creation), <code>02_Form_and_Dedup</code> (the form handler + name matching), <code>03_Dashboard</code>, <code>04_Timeline</code> (timeline generation), <code>05_Certification</code>, <code>06_Alerts</code>, <code>07_UI_Functions</code> (the sidebars/dialogs), <code>08_DataSync</code>, and <code>DIAGNOSTIC</code> (a troubleshooting utility).</p><h4>The tabs, and which is the source of truth</h4><p><code>Daily Training Log</code> is the <strong class=\"hl\">source of truth</strong> — raw form responses. Everything else is derived from it: <code>Master Dashboard</code> (live overview), <code>Training Schedule</code> (the generated day-by-day plan), <code>Training Needs</code> (weekly manager view), <code>Certification Log</code> (archive of certified people). Config lives in two editable tabs: <code>Position Requirements</code> (FOH/BOH positions with min/target/max hours — what all progress measures against) and <code>Alert Settings</code> (which alerts fire and who gets them). <code>Name Deduplication</code> is the merge map. Setup creates them all.</p><h4>Name normalization, and why it's a whole tab</h4><p>New-hire names come in inconsistent — nicknames, typos, spacing. <code>02_Form_and_Dedup</code> scans the log for <em>similar</em> names (fuzzy matching, not exact) so one trainee's hours don't scatter across \"Tim,\" \"Timothy,\" and \"Timmothy.\" When the match is confident it merges; when it isn't, it surfaces the pair on the <code>Name Deduplication</code> sheet for a human to confirm from a sidebar — it never silently merges two people who might be different.</p><h4>The certification workflow</h4><p><code>05_Certification</code> watches each trainee's hours against <code>Position Requirements</code>; when someone clears a position (or all of them), it flags them cert-ready and, on confirmation, moves them to the <code>Certification Log</code> with their totals and duration — so the active dashboard stays about who's <em>still training</em>.</p><h4>Setup is idempotent; it's a Sheets/Forms system, not a web app</h4><p>There's no <code>/exec</code> URL to redeploy — the \"deploy\" is the Sheet, its bound script, the connected Google Form, and the installed form-submit trigger. Re-running setup rebuilds any missing tabs and re-wires things without wiping data (safe to run again if something looks off). Keep the Form linked to the Sheet, keep the position list and alert recipients current, and it runs itself.</p>",
+  "Monday Morning Huddle Reporting": "<h4>The pipeline</h4><p>Upload lands the schedules and punches into <strong class=\"hl\">six input tabs</strong>. From there: parse the punches (<code>parsePunchesFromSheet</code>) → analyze (planned vs actual, variance, OT, attendance flags) → write the two views onto the Monday sheet (last-week review in one block of rows, this-week projection in another) → append the week to <code>History</code> → send the two-tier emails → (later) the input tabs get wiped for the next week. Each stage is its own file — <code>Parser.gs</code>, <code>Analysis.gs</code>, <code>Report(s).gs</code>, <code>Email.gs</code>, <code>Archive.gs</code>, <code>History.gs</code> — so a change to one stays contained.</p><h4><code>History</code> is the spine — and it's protected</h4><p><code>History</code> is the permanent backend data store. It powers two things nothing else can: the <strong class=\"hl\">chronic flags</strong> (an employee who's flagged week after week) and every historical report. Because so much depends on it, the tab is <strong class=\"hl\">protected</strong> (<code>protectHistoryTab_</code>) — automated writes only. <strong class=\"hl\">Editing <code>History</code> by hand corrupts the chronic flags and the historical reports.</strong> If a <code>History</code> row is wrong, re-run the week rather than editing the cell. Rows carry a <code>weekLabel</code>, which is how reports pull one week without bleeding in the last.</p><h4>Why cross-location OT matters here</h4><p>Overtime is a per-<em>employee</em> number, not a per-<em>store</em> number. Someone who works 25 hours at each location has 10 hours of OT that neither store's own report will ever show. This tool <strong class=\"hl\">combines an employee's hours across both CH and DBU before it computes OT</strong> — that's the whole reason it exists alongside the standard analytics. The corollary is a real gotcha: <strong class=\"hl\">if you only upload one location, the combined-hours OT is invisible</strong> — you have to upload both for the number to be right.</p><h4>The multi-week trap</h4><p>The one recurring failure mode is uploading a file that spans more than one week, which double-counts hours. The <strong class=\"hl\">upload dialog checks <code>History</code> and warns you</strong> before it processes — read the warning. Combined with the <code>weekLabel</code> filtering, that's what keeps old weeks from stacking onto the current one. If numbers ever look doubled, this is the first thing to check. (Related: closing the upload dialog early can leave the input tabs half-written — finish the run.)</p><h4>The two-tier email</h4><p><code>sendTwoTierEmails</code> builds two levels from the same analysis: a director-level summary (staffing and labor conversations) and a manager-level one (more detail). There's also a re-send that emails the latest analysis again <strong class=\"hl\">without</strong> re-running it — handy if a recipient was wrong or the first send failed. Recipients live on the <strong class=\"hl\">Settings</strong> tab; update them when a manager leaves or a director joins.</p><h4>It's a Sheets add-on, not a web app</h4><p>No <code>/exec</code> URL — the \"deploy\" is the Sheet, its bound script, and the custom menu. A weekly trigger (<code>setupWeeklyArchiveTrigger</code>) snapshots each huddle so the history keeps accumulating; keep it installed. Re-running <code>initializeSheet()</code> is safe and rebuilds the tabs without touching your data.</p>",
+  "foh-links-menu": "<h4>Two tabs run the whole thing</h4><p><code>Links</code> (Category | Name | URL, plus a Pin column the sidebar manages) drives the menu and the sidebar; <code>Settings</code> drives the reset schedule, the alert email, and the donation defaults. <code>runInitialSetup</code> creates both with example rows and is idempotent — re-running rebuilds anything missing without touching what's there. (There's also a hidden <code>DonationLog</code> tab where the donation dialog records each request.)</p><h4>How the menu gets built</h4><p><code>onOpen</code> runs when the spreadsheet opens: it reads the <code>Links</code> tab, groups rows by Category, and builds the <strong class=\"hl\">FOH Links</strong> menu on the fly — which is exactly why the menu is missing until you reload after setup. The sidebar (<code>Sidebar.html</code>) is the richer version: search, add/edit/delete, and <code>togglePin(row)</code> to pin a link to the top.</p><h4>The weekly reset, mechanically</h4><p>Each day tab (<code>Monday</code>…<code>Saturday</code>) has a matching <code>Monday (Reset)</code>…<code>Saturday (Reset)</code> <strong class=\"hl\">template</strong>. <code>resetSingleDay_(ss, day)</code> copies the template over the live day tab, wiping that day's names back to a clean slate. On the configured day/hour a trigger (<code>resetWeeklySheets</code>) does all of them; <code>manualReset</code> does it on demand with a confirm, and <code>testResetMonday</code> previews just Monday so you can eyeball the copy before trusting the automation. <code>setupResetTrigger</code> removes any existing reset trigger before installing a new one (safe to re-run); <code>deleteResetTriggers</code> removes it. A failed run emails the Alert Email (falling back to the sheet owner) — so a silent failure almost always means the trigger was never installed.</p><h4>Why exact tab names matter</h4><p>The reset matches <code>Monday</code> to <code>Monday (Reset)</code> <strong class=\"hl\">by name</strong>. Rename either — or delete a <code>(Reset)</code> template — and the pair no longer matches, and that day silently stops resetting. It's the one thing that quietly breaks this tool.</p><h4>It's a menu add-on, not a web app</h4><p>No deployment or <code>/exec</code> URL — the \"install\" is pasting the four numbered script files and two HTML files, running <code>runInitialSetup</code>, and reloading so <code>onOpen</code> builds the menu. (If <code>ADOPTION_SHEET_ID</code> is set in Script Properties, it also pings the adoption tracker once a day; no property means it's a silent no-op.)</p>",
+  "shared-table-email-summary": "<h4>How the send decides to fire</h4><p>There's no weekly trigger. Instead <code>onDailyTrigger</code> runs every day and walks a short checklist: (1) is today's day-of-week the configured <strong class=\"hl\">Send Day</strong>? If not, exit. (2) does <strong class=\"hl\">Last Sent</strong> already equal today? If so, exit — this is the duplicate-send guard. (3) compute last week's date range, (4) filter the form rows into it, (5) sum them, (6) send the email, then stamp <strong class=\"hl\">Last Sent</strong>. A cheap daily check that no-ops most days is easier to reason about than an exact weekly schedule, and the Last-Sent stamp means even if the trigger fires twice, only one email goes out.</p><h4>Where the data comes from</h4><p>It reads the Google Form response rows already in the Sheet and filters them to last week's range — it doesn't own the form, it summarizes it. So the whole thing depends on the form staying connected to this Sheet; if responses stop landing here, the summary goes empty.</p><h4>Config lives in a config sheet, edited from the sidebar</h4><p><code>Send Day</code>, <code>Send Time</code>, <code>Last Sent</code>, recipients, and format are stored as config rows (<code>getConfigValue</code> / <code>ensureConfigRow</code>) and edited through the \"Waste Summary → Settings\" sidebar. Notably, <strong class=\"hl\">saving settings re-installs the trigger</strong> to match the new time — so changing the hour in the sidebar actually reschedules the job, you don't touch triggers by hand. There's also a <strong class=\"hl\">\"Send Test Email Now\"</strong> menu item to fire the summary immediately without waiting for the send day.</p><h4>It's a menu/sidebar add-on, not a web app</h4><p>No <code>/exec</code> URL — paste <code>Code.gs</code> and the sidebar HTML, reload so the \"Waste Summary\" menu appears, open Settings (which installs the daily trigger when you save), and you're done. <code>deleteTrigger()</code> clears the schedule for a reset.</p>",
+  "adoption-tracker": "<h4>Why a ping instead of a dashboard</h4><p>Rather than each tool reporting rich analytics, every tool drops a single dated row (<code>[date, toolName]</code>) the first time it's used that day. That's deliberately dumb: one Script Properties read (~5 ms) plus at most one sheet write per tool per day, so it's invisible to the tool's performance, and the <code>Pings</code> tab grows ~8 rows/day worst case — years of headroom. All the intelligence lives in one place — the digest — not scattered across every tool.</p><h4>The de-duplication (why it's \"days,\" not \"opens\")</h4><p>A tool remembers the last day it pinged in its own Script Properties (<code>ADOPTION_LAST_PING</code>) and skips if it already pinged today. So the raw data is already one-row-per-tool-per-day. That's the whole reason \"days used\" is a clean count of <em>distinct days</em> and not a noisy hit count — it measures adoption, not traffic.</p><h4>How the digest is computed</h4><p><code>sendWeeklyAdoptionDigest</code> reads every <code>Pings</code> row and buckets it per tool into three numbers: <strong class=\"hl\">this week</strong> (pings since the start of the current week), <strong class=\"hl\">prior 4</strong> (pings in the preceding four weeks), and <strong class=\"hl\">last seen</strong> (the most recent date). The email table then shows <em>Days used this week</em>, <em>Avg days/week (prior 4)</em> — literally <code>prior4 / 4</code> — and <em>Last opened</em>, so a tool sitting well under its own average jumps out. A dash means zero this week. The digest goes to the <code>Digest Email</code> from Settings, falling back to the script owner's address if that's blank.</p><h4>Fail-silent by design</h4><p>The ping is wrapped in a try/catch that can never throw — if the adoption sheet is missing, the ID isn't set, or anything else goes wrong, the tool keeps working and just doesn't log. That's what makes it safe to ship in a public template: no ID, no phone-home, no risk to the host tool.</p><h4>The pieces</h4><p>The shared <code>Tool Adoption</code> sheet has a <code>Pings</code> tab (the raw <code>[date, tool]</code> rows) and a <code>Settings</code> tab (<code>Digest Email</code>, seeded to the owner's address). This bound <code>Code.gs</code> builds and sends the digest on a Monday 6 AM trigger (<code>createWeeklyTrigger</code>, which checks for an existing one so re-running won't duplicate). <code>runInitialSetup</code> builds the tabs and is safe to re-run.</p>"
+};
+
+  // ── RENDER ──────────────────────────────────────────────────────────
+  var BADGE_LABEL = { web:"Web app", menu:"Menu tool", standalone:"Standalone", risk:"⚠ personal acct", dead:"never deployed" };
+  var PRI_LABEL   = { p1:"P1", p2:"P2", p3:"P3" };
+
+  function renderScenarios(){
+    document.getElementById('scenarios').innerHTML = SCENARIOS.map(function(x,i){
+      return '<div class="card scn" data-note="scn:'+i+'">'
+        + '<div class="symptom">'+x.s+'</div>'
+        + '<div class="row"><span class="k">Cause</span><span class="v">'+x.c+'</span></div>'
+        + '<div class="row fix"><span class="k">Fix</span><span class="v">'+x.f+'</span></div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function renderTools(){
+    document.getElementById('toolcards').innerHTML = TOOLS.map(function(t){
+      var badges = (t.pri ? '<span class="badge '+t.pri+'">'+PRI_LABEL[t.pri]+'</span>' : '')
+        + t.b.map(function(b){ return '<span class="badge '+b+'">'+BADGE_LABEL[b]+'</span>'; }).join('');
+      var status = t.status ? '<div class="callout" style="margin-bottom:.7rem">'+t.status+'</div>' : '';
+      var rows = ''
+        + '<dt>Setup</dt><dd>'+t.setup+'</dd>'
+        + '<dt>Automation</dt><dd>'+t.auto+'</dd>'
+        + '<dt>Deploy</dt><dd>'+t.deploy+'</dd>'
+        + '<dt>Re-authorize</dt><dd>'+t.reauth+'</dd>'
+        + '<dt>Properties</dt><dd>'+t.props+'</dd>'
+        + (t.verify ? '<dt>✔ Verify</dt><dd class="verify">'+t.verify+'</dd>' : '')
+        + (t.breaks ? '<dt>How it fails</dt><dd>'+t.breaks+'</dd>' : '')
+        + (t.note ? '<dt>Note</dt><dd>'+t.note+'</dd>' : '')
+        + (t.todo ? '<dt>Before leaving</dt><dd>'+t.todo+'</dd>' : '');
+      var deep = DEEPER[t.n]
+        ? '<details class="deeper"><summary>Go deeper — how this tool actually works</summary>'
+          + '<div class="deep-body">'+DEEPER[t.n]+'</div></details>'
+        : '';
+      return '<div class="card tool '+(t.pri||'')+'" data-note="tool:'+t.n+'">'
+        + '<div class="head"><h3>'+t.n+'</h3>'+badges+'</div>'
+        + '<div class="what">'+t.what+'</div>'
+        + status
+        + '<dl>'+rows+'</dl>'
+        + deep + '</div>';
+    }).join('');
+  }
+
+  // ── EDITABLE CELLS + PER-CARD NOTES ─────────────────────────────────
+  // Stored in this browser's localStorage. Deliberately no server side:
+  // Code.gs holds no scopes and this page must stay a plain document.
+  // The Export button is how anything written here actually survives.
+  var STORE_KEY = 'succession-guide-v1';
+  var store = {};
+  try { store = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch(err){ store = {}; }
+
+  function save(){
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(store)); }
+    catch(err){
+      document.getElementById('noteState').innerHTML =
+        '⚠ This browser is blocking saving — <strong class="hl">Export before you close the page.</strong>';
+    }
+  }
+  function setVal(k, v){ if(v){ store[k] = v; } else { delete store[k]; } save(); }
+
+  function wireTable(tbl, prefix){
+    var rows = tbl.querySelectorAll('tbody tr');
+    for(var r=0; r<rows.length; r++){
+      for(var c=0; c<rows[r].cells.length; c++){
+        (function(cell, k){
+          cell.classList.add('ed');
+          cell.setAttribute('contenteditable','true');
+          if(store[k] !== undefined){ cell.textContent = store[k]; cell.classList.remove('fill'); }
+          cell.addEventListener('focus', function(){
+            if(cell.classList.contains('fill')){ cell.textContent = ''; cell.classList.remove('fill'); }
+          });
+          cell.addEventListener('blur', function(){ setVal(k, cell.textContent.trim()); });
+        })(rows[r].cells[c], prefix+':r'+r+':c'+c);
+      }
+    }
+  }
+
+  function openNote(card, id, focus){
+    var el = card.querySelector('.note');
+    if(!el){
+      el = document.createElement('div');
+      el.className = 'note';
+      el.innerHTML = '<div class="lbl"><span>📝 Note</span><button title="Delete this note">✕</button></div>'
+                   + '<div class="body" contenteditable="true"></div>';
+      var deep = card.querySelector('details.deeper');
+      if(deep){ card.insertBefore(el, deep); } else { card.appendChild(el); }
+      var body = el.querySelector('.body');
+      body.textContent = store['note:'+id] || '';
+      body.addEventListener('blur', function(){
+        var v = body.textContent.trim();
+        setVal('note:'+id, v);
+        if(!v){ el.remove(); }
+      });
+      el.querySelector('.lbl button').addEventListener('click', function(){
+        setVal('note:'+id, ''); el.remove();
+      });
+    }
+    if(focus){ el.querySelector('.body').focus(); }
+  }
+
+  function wireNotes(){
+    document.querySelectorAll('.card[data-note]').forEach(function(card){
+      var id = card.getAttribute('data-note');
+      var btn = document.createElement('button');
+      btn.className = 'notebtn';
+      btn.title = 'Add a note';
+      btn.textContent = '📝';
+      btn.addEventListener('click', function(){ openNote(card, id, true); });
+      card.appendChild(btn);
+      if(store['note:'+id]){ openNote(card, id, false); }
+    });
+  }
+
+  function buildExport(){
+    var L = ['TECH HUB — SUCCESSION & REVIVAL GUIDE',
+             'Edits and notes exported ' + new Date().toLocaleString(), ''];
+    document.querySelectorAll('table[data-edit]').forEach(function(t){
+      L.push('## ' + t.getAttribute('data-edit'));
+      L.push([].map.call(t.querySelectorAll('thead th'), function(th){ return th.textContent.trim(); }).join(' | '));
+      [].forEach.call(t.querySelectorAll('tbody tr'), function(tr){
+        L.push([].map.call(tr.cells, function(td){
+          var v = td.textContent.trim();
+          return td.classList.contains('fill') ? '?? NOT FILLED IN' : (v || '—');
+        }).join(' | '));
+      });
+      L.push('');
+    });
+    var notes = [];
+    document.querySelectorAll('.card .note .body').forEach(function(b){
+      var txt = b.textContent.trim();
+      if(!txt) return;
+      var card = b.parentNode.parentNode;
+      var h = card.querySelector('h3') || card.querySelector('.symptom');
+      notes.push('— ' + (h ? h.textContent.trim() : card.getAttribute('data-note')));
+      notes.push('  ' + txt.replace(/\n/g, '\n  '));
+    });
+    L.push('## My notes');
+    L = L.concat(notes.length ? notes : ['(none yet)']);
+    return L.join('\n');
+  }
+
+  var pane = document.getElementById('exportPane');
+  function closeExport(){ pane.classList.remove('on'); }
+  document.getElementById('exportBtn').addEventListener('click', function(){
+    document.getElementById('exportText').value = buildExport();
+    pane.classList.add('on');
+  });
+  document.getElementById('closeBtn').addEventListener('click', closeExport);
+  pane.addEventListener('click', function(e){ if(e.target === pane){ closeExport(); } });
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    var ta = document.getElementById('exportText');
+    ta.removeAttribute('readonly'); ta.select(); ta.setSelectionRange(0, ta.value.length);
+    try { document.execCommand('copy'); this.textContent = 'Copied'; }
+    catch(err){ this.textContent = 'Press Ctrl/Cmd-C'; }
+    ta.setAttribute('readonly','readonly');
+  });
+  document.getElementById('printBtn').addEventListener('click', function(){
+    var was = q.value;
+    if(was){ q.value = ''; runSearch(); }                       // never print a filtered page
+    var opened = [];
+    document.querySelectorAll('details.deeper').forEach(function(d){
+      if(!d.open){ d.open = true; opened.push(d); }
+    });
+    window.print();
+    opened.forEach(function(d){ d.open = false; });
+    if(was){ q.value = was; runSearch(); }
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', function(){
+    if(confirm('Erase every edit and note you have made on this page in this browser?')){
+      store = {}; save(); location.reload();
+    }
+  });
+
+  // ── BUILD A PLAIN-TEXT SHEET COPY ───────────────────────────────────
+  // Zero-drift by construction: the browser already parsed the content, so
+  // we strip the HTML to text and hand it to a dumb server writer. The page
+  // stays the single source; the Sheet is a one-way, regenerable mirror.
+  function plain(html){
+    if(html == null) return '';
+    return String(html)
+      .replace(/<br\s*\/?>/gi, ' ').replace(/<\/(p|li|div|h[1-6])>/gi, ' ')
+      .replace(/<[^>]+>/g, '')
+      .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>')
+      .replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/&nbsp;/g,' ')
+      .replace(/\s+/g,' ').trim();
+  }
+  function tableRows(id){
+    var t = document.getElementById(id), out = [];
+    if(!t) return out;
+    t.querySelectorAll('tr').forEach(function(tr){
+      out.push([].map.call(tr.cells, function(c){ return c.textContent.trim() || '—'; }));
+    });
+    return out;
+  }
+  function buildSheetPayload(){
+    var scn = [['Symptom','Cause','Fix']];
+    SCENARIOS.forEach(function(x){ scn.push([plain(x.s), plain(x.c), plain(x.f)]); });
+
+    var tl = [['Tool','Priority','Type','Setup','Automation','Deploy','Re-authorize','Properties','Verify','How it fails','Note','Before leaving','Status']];
+    TOOLS.forEach(function(t){
+      tl.push([ t.n, (PRI_LABEL[t.pri]||''),
+        t.b.map(function(b){ return BADGE_LABEL[b]; }).join(' / '),
+        plain(t.setup), plain(t.auto), plain(t.deploy), plain(t.reauth), plain(t.props),
+        plain(t.verify), plain(t.breaks), plain(t.note), plain(t.todo), plain(t.status) ]);
+    });
+
+    var gl = [['Term','Meaning']];
+    document.querySelectorAll('#glossary dl.gloss dt').forEach(function(dt){
+      var dd = dt.nextElementSibling;
+      gl.push([ dt.textContent.trim(), dd ? dd.textContent.trim() : '' ]);
+    });
+
+    var readme = [
+      ['Tech Hub — Succession & Revival Guide (text copy)'],
+      ['Generated ' + new Date().toLocaleString() + ' from the on-screen guide.'],
+      ['The full interactive version — search, and the per-tool "Go deeper" deep dives — lives at the web app /exec URL. Those deep dives are NOT copied here.'],
+      ['This Sheet is a fallback you can read with no deployment. To refresh it after editing the guide, open the web app and click "Build Sheet copy" again.'],
+      ['The Ownership and Contacts tabs below capture whatever was typed into those tables on screen at build time.']
+    ];
+
+    return [
+      { name:'Read Me First', rows:readme },
+      { name:'Triage Order', rows:tableRows('triageTable') },
+      { name:"Something's Broken", rows:scn },
+      { name:'Per-Tool Cards', rows:tl },
+      { name:'Ownership', rows:tableRows('ownTable') },
+      { name:'Contacts', rows:tableRows('contactTable') },
+      { name:'Glossary', rows:gl }
+    ];
+  }
+  var sheetBtn = document.getElementById('sheetBtn');
+  if(sheetBtn){
+    sheetBtn.addEventListener('click', function(){
+      if(typeof google === 'undefined' || !google.script || !google.script.run){
+        alert('Building the Sheet copy only works from the deployed web app — it needs to reach the Sheet. Open the /exec URL and click this there.');
+        return;
+      }
+      var label = sheetBtn.textContent;
+      sheetBtn.disabled = true; sheetBtn.textContent = 'Building…';
+      google.script.run
+        .withSuccessHandler(function(){
+          sheetBtn.textContent = '✓ Sheet updated';
+          setTimeout(function(){ sheetBtn.textContent = label; sheetBtn.disabled = false; }, 2500);
+        })
+        .withFailureHandler(function(err){
+          sheetBtn.textContent = label; sheetBtn.disabled = false;
+          alert('Could not write the Sheet:\n' + (err && err.message ? err.message : err));
+        })
+        .writeGuideToSheet(buildSheetPayload());
+    });
+  }
+
+  // ── TABLES BUILT FROM `TOOLS` ───────────────────────────────────────
+  // Both tables render from the same array as the cards, so adding a tool
+  // is one object — the tables can't drift out of sync with the cards.
+  function triageOrder(){
+    var rank = { p1:1, p2:2, p3:3 };
+    return TOOLS.slice().sort(function(a,b){
+      var d = (rank[a.pri]||9) - (rank[b.pri]||9);
+      if(d) return d;
+      return (b.risk?1:0) - (a.risk?1:0);   // personal-account tools first inside a tier
+    });
+  }
+
+  function renderTables(){
+    document.getElementById('triageBody').innerHTML = triageOrder().map(function(t){
+      return '<tr'+(t.risk?' class="risk"':'')+'>'
+        + '<td class="'+t.pri+'">'+PRI_LABEL[t.pri]+'</td>'
+        + '<td>'+t.n+'</td><td>'+(t.why||'')+'</td><td>'+(t.revive||'')+'</td></tr>';
+    }).join('');
+
+    document.getElementById('ownBody').innerHTML = TOOLS.map(function(t){
+      var web = t.b.indexOf('web') >= 0 || t.b.indexOf('standalone') >= 0;
+      function cell(v){ return v ? '<td>'+v+'</td>' : '<td class="fill">fill</td>'; }
+      return '<tr'+(t.risk?' class="risk"':'')+'>'
+        + '<td>'+t.n+(t.risk?' ⚠':'')+'</td>'
+        + cell(t.owner) + cell(t.loc)
+        + (web ? '<td class="fill">fill</td><td class="fill">fill</td>' : '<td>n/a (menu)</td><td>n/a</td>')
+        + '<td class="fill"></td></tr>';
+    }).join('');
+  }
+
+  // ── SEARCH ──────────────────────────────────────────────────────────
+  var q = document.getElementById('q');
+  var countEl = document.getElementById('count');
+  var noRes = document.getElementById('noResults');
+
+  function runSearch(){
+    var term = q.value.trim().toLowerCase();
+    var cards = document.querySelectorAll('.card');
+    var shown = 0;
+    cards.forEach(function(c){
+      var hit = !term || c.textContent.toLowerCase().indexOf(term) >= 0;
+      c.classList.toggle('hidden', !hit);
+      if(hit) shown++;
+      // If the only match is inside a collapsed deep dive, open it so the hit is visible.
+      // Only ever close a panel that search itself opened — never one the reader opened.
+      var d = c.querySelector('details.deeper');
+      if(d){
+        if(!term){
+          if(d.dataset.autoOpened){ d.open = false; delete d.dataset.autoOpened; }
+          return;
+        }
+        var inDeep = d.textContent.toLowerCase().indexOf(term) >= 0;
+        var summaryOnly = c.textContent.toLowerCase().replace(d.textContent.toLowerCase(), '');
+        var want = hit && inDeep && summaryOnly.indexOf(term) < 0;
+        if(want && !d.open){ d.open = true; d.dataset.autoOpened = '1'; }
+        else if(!want && d.dataset.autoOpened){ d.open = false; delete d.dataset.autoOpened; }
+      }
+    });
+    // Hide a section whose cards are all filtered out (keep everything when term is empty)
+    document.querySelectorAll('section').forEach(function(sec){
+      if(!term){ sec.classList.remove('hidden'); return; }
+      var vis = sec.querySelectorAll('.card:not(.hidden)').length;
+      sec.classList.toggle('hidden', vis === 0);
+    });
+    noRes.style.display = (term && shown === 0) ? 'block' : 'none';
+    countEl.textContent = term ? (shown + ' result' + (shown===1?'':'s')) : '';
+  }
+
+  q.addEventListener('input', runSearch);
+  // A jump link during an active search would scroll to a hidden section — clear the filter first.
+  document.querySelectorAll('nav.jump a').forEach(function(a){
+    a.addEventListener('click', function(){
+      if(q.value){ q.value=''; runSearch(); }
+    });
+  });
+  document.addEventListener('keydown', function(e){
+    var t = e.target;
+    var typing = t && (t.isContentEditable || t.tagName === 'INPUT' || t.tagName === 'TEXTAREA');
+    if(e.key === '/' && !typing){ e.preventDefault(); q.focus(); }
+    if(e.key === 'Escape'){
+      if(t && t.isContentEditable){ t.blur(); return; }          // leave the cell, keep the search
+      if(pane.classList.contains('on')){ closeExport(); return; }
+      q.value=''; runSearch(); q.blur();
+    }
+  });
+
+  renderScenarios();
+  renderTools();
+  renderTables();
+  wireTable(document.getElementById('contactTable'), 'contact');
+  wireTable(document.getElementById('triageTable'), 'triage');
+  wireTable(document.getElementById('ownTable'), 'own');
+  wireNotes();
+  runSearch();
+</script>
+</body>
+</html>
